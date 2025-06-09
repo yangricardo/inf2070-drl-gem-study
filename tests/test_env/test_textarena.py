@@ -1,4 +1,5 @@
 from transformers import AutoTokenizer
+import fire
 
 import gem
 from gem.envs.multi_turn import MultiTurnEnv
@@ -7,8 +8,8 @@ from gem.wrappers.stateful_observation import (ChatTemplatedObservation,
                                                ConcatenatedObservation)
 
 
-def test():
-    env: MultiTurnEnv = gem.make("ta:GuessTheNumber-v0", max_turns=3)
+def test(env_name: str = "ta:GuessTheNumber-v0"):
+    env: MultiTurnEnv = gem.make(env_name, max_turns=3)
     policy = lambda _: env.sample_random_action()
 
     print("\n" * 5, "EPISODE 1: DEFAULT OBSERVATION")
@@ -25,4 +26,11 @@ def test():
 
 
 if __name__ == "__main__":
-    test()
+    fire.Fire(test)
+
+    """Run with:
+        python -m tests.test_env.test_textarena --env_name ta:GuessTheNumber-v0
+        python -m tests.test_env.test_textarena --env_name ta:Mastermind-v0
+        python -m tests.test_env.test_textarena --env_name ta:Minesweeper-v0
+    """
+
