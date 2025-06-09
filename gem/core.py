@@ -48,11 +48,19 @@ class Env(abc.ABC):
 
 WrapperObsType = TypeVar("WrapperObsType")
 
-
-class ObservationWrapper(Env):
+class EnvWrapper(Env, abc.ABC):
     def __init__(self, env: Env):
         super().__init__()
         self.env = env
+
+        for attr in dir(env):
+            if not attr.startswith("_") and not hasattr(self, attr):
+                setattr(self, attr, getattr(env, attr))
+
+
+class ObservationWrapper(EnvWrapper):
+    def __init__(self, env: Env):
+        super().__init__(env)
 
     def step(
         self, action: ActType
@@ -77,3 +85,5 @@ class ObservationWrapper(Env):
         """
         del obs
         raise NotImplementedError
+
+
