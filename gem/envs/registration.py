@@ -7,7 +7,9 @@ from typing import Any, Callable, Dict, Optional, Sequence, Union
 
 from gem import Env
 from gem.core import Wrapper
+from gem.vector.async_vector_env import AsyncVectorEnv
 from gem.vector.sync_vector_env import SyncVectorEnv
+from gem.vector.vector_env import VectorEnv
 
 
 @dataclass
@@ -71,8 +73,9 @@ def make_vec(
     num_envs: int = 1,
     wrappers: Optional[Sequence[Wrapper]] = None,
     vec_kwargs: Optional[Sequence[dict]] = None,
+    async_mode: bool = False,
     **kwargs,
-) -> SyncVectorEnv:
+) -> VectorEnv:
     def create_single_env(idx: int) -> Env:
         if vec_kwargs is not None:
             _kwargs = vec_kwargs[idx]
@@ -86,7 +89,12 @@ def make_vec(
             single_env = wrapper(single_env)
         return single_env
 
-    env = SyncVectorEnv(
-        env_fns=[partial(create_single_env, i) for i in range(num_envs)],
-    )
+    if async_mode:
+        env = AsyncVectorEnv(
+            env_fns=[partial(create_single_env, i) for i in range(num_envs)],
+        )
+    else:
+        env = SyncVectorEnv(
+            env_fns=[partial(create_single_env, i) for i in range(num_envs)],
+        )
     return env
