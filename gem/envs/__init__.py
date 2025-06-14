@@ -108,6 +108,19 @@ register(
     max_turns=8,
 )
 
+# Register math dataset environments
+from datasets import load_dataset
+
+register(
+    "eval:MATH500",
+    "gem.envs.math_env:MathEnv",
+    # dataset_name="axon-rl/Eval-MATH500",
+    # split="test",
+    dataset=load_dataset("axon-rl/Eval-MATH500"),
+    question_key="problem",
+    answer_key="answer",
+)
+
 # Register datasets from ReasoningGym
 for name in rg.factory.DATASETS.keys():
     register(
