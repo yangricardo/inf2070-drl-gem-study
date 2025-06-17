@@ -62,7 +62,7 @@ register(
     "gem.envs.textarena.mastermind:MastermindEnv",
     code_length=2,
     num_numbers=6,
-    max_turns=20,
+    max_turns=6,
     duplicate_numbers=False,
 )
 # Minesweeper
@@ -109,14 +109,13 @@ register(
 )
 
 # Register math dataset environments
-from datasets import load_dataset
 
 register(
     "eval:MATH500",
     "gem.envs.math_env:MathEnv",
-    # dataset_name="axon-rl/Eval-MATH500",
-    # split="test",
-    dataset=load_dataset("axon-rl/Eval-MATH500"),
+    dataset_name="axon-rl/Eval-MATH500",
+    split="test",
+    # dataset=load_dataset("axon-rl/Eval-MATH500"),
     question_key="problem",
     answer_key="answer",
 )
