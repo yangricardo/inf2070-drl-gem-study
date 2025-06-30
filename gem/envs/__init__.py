@@ -202,6 +202,24 @@ for i in [0, 1, 2, 3, 5]:
         answer_key="answer",
     )
 
+register(
+    "qa:NaturalQuestions",
+    "gem.envs.qa_env:QaEnv",
+    dataset_name="axon-rl/NaturalQuestions",
+    split="train",
+    question_key="problem",
+    answer_key="answer",
+)
+
+register(
+    "qa:HotpotQA",
+    "gem.envs.qa_env:QaEnv",
+    dataset_name="axon-rl/HotpotQA",
+    split="train",
+    question_key="problem",
+    answer_key="answer",
+)
+
 # Register datasets from ReasoningGym
 
 for name in rg.factory.DATASETS.keys():
@@ -234,6 +252,7 @@ register(
     test_key="tests",
 )
 
+## QaOpen
 register(
     "eval:QaOpen",
     "gem.envs.qa_env:QaEnv",

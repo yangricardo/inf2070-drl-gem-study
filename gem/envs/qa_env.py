@@ -1,6 +1,7 @@
 """Env for question answering datasets."""
 
 import logging
+from functools import partial
 from typing import Any, Optional, SupportsFloat, Tuple
 
 from datasets import Dataset, DatasetDict, load_dataset
@@ -14,9 +15,10 @@ from gem.utils.qa_em import em_check
 logger = logging.getLogger(__name__)
 
 
-def apply_prompt(example):
+# TODO: refactor later
+def apply_prompt(example, question_key: str = 'question'):
     prompt_template = "Answer the given question. Question: {question}\n"
-    example["question"] = prompt_template.format(question=example["question"])
+    example[question_key] = prompt_template.format(question=example[question_key])
     return example
 
 
@@ -52,7 +54,8 @@ class QaEnv(Env):
                     f"Please specify a split: {list(dataset.keys())}"
                 )
         assert isinstance(dataset, Dataset), f"Expected a Dataset, got {type(dataset)}"
-        dataset = dataset.map(apply_prompt)
+        apply_prompt_func = partial(apply_prompt, question_key=question_key)
+        dataset = dataset.map(apply_prompt_func)
         self.dataset = dataset.shuffle(seed=self.seed)
         self.idx = 0
         self.epoch = 0
