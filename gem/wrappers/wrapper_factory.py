@@ -17,6 +17,25 @@ WRAPPER_FACTORY = {
         tool_reward=0.1,
         max_tool_uses=10,
     ),
+    "python_tool_no_reward": partial(
+        ToolEnvWrapper,
+        tools=[PythonCodeTool(timeout=5)],
+        tool_reward=0.0,
+        max_tool_uses=10,
+    ),
+    "python_tool_1_reward": partial(
+        ToolEnvWrapper,
+        tools=[PythonCodeTool(timeout=5)],
+        tool_reward=1.0,
+        max_tool_uses=10,
+    ),
+    "python_tool_for_dummy_env": partial(
+        ToolEnvWrapper,
+        tools=[PythonCodeTool(timeout=5)],
+        tool_reward=0.1,
+        max_tool_uses=10,
+        obs_suffix="Great! Now output another example python code block to print something.",
+    ),
     "search_tool": partial(
         ToolEnvWrapper,
         tools=[SearchTool(topk=3, timeout=5)],

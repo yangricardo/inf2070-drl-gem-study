@@ -20,7 +20,10 @@ def step_reset_env(action, env, autoreset_mode, autoreset_env):
     elif autoreset_mode == AutoresetMode.SAME_STEP:
         obs, reward, terminated, truncated, info = env.step(action)
         if terminated or truncated:
+            prev_ep_infos = deepcopy(info)
             obs, info = env.reset()
+            for key, value in prev_ep_infos.items():
+                info[f"prev_ep_{key}"] = value
     else:
         raise ValueError
     return obs, reward, terminated, truncated, info

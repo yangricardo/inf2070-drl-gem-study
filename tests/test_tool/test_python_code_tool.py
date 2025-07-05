@@ -211,6 +211,7 @@ if __name__ == "__main__":
     """Run with:
     python -m tests.test_tool.test_python_code_tool single_action --env_name ta:GuessTheNumber-v0
     python -m tests.test_tool.test_python_code_tool episode --env_name ta:GuessTheNumber-v0
+    python -m tests.test_tool.test_python_code_tool episode --env_name eval:MATH500
     python -m tests.test_tool.test_python_code_tool llm_episode --env_name ta:GuessTheNumber-v0 --model_name Qwen/Qwen3-0.6B-Base
     python -m tests.test_tool.test_python_code_tool episode --env_name eval:MATH500
     python -m tests.test_tool.test_python_code_tool llm_episode --env_name eval:MATH500 --model_name Qwen/Qwen3-0.6B-Base
