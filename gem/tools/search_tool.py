@@ -50,7 +50,7 @@ class SearchTool(BaseTool):
         if not self.search_url:
             raise ValueError("search_url must be provided for SearchTool.")
 
-        payload = {"queries": [query], "topk": self.topk, "return_scores": True}
+        payload = {"query": query, "topk": self.topk, "return_scores": True}
         try:
             response = requests.post(
                 self.search_url,
@@ -58,7 +58,7 @@ class SearchTool(BaseTool):
                 timeout=self.timeout,
             )
             response.raise_for_status()
-            result = msgspec.msgpack.decode(response.content)["result"][0]
+            result = msgspec.msgpack.decode(response.content)["result"]
             return self._passages2string(result)
         except Exception as e:
             return f"[SearchTool Error: {e}]"
@@ -74,23 +74,16 @@ class SearchTool(BaseTool):
 
     def instruction_string(self) -> str:
         return (
-            "You are provided with a search engine to help answer questions.\n\n"
-            "Instructions:\n"
-            "- Always conduct reasoning inside:\n"
-            "  <think> your reasoning here </think>\n"
-            "- After reasoning, if knowledge is missing, issue a search query:\n"
-            "  <search> your query </search>\n"
-            "- The search engine returns results inside:\n"
+            "You have access to a search engine to help answer questions.\n\n"
+            "Additional instructions:\n"
+            "- If your initial reasoning in <think> shows you lack some knowledge, explain what you need to find next inside a new <think> block.\n"
+            "- Then issue a search query using:\n"
+            "  <search> your query here </search>\n"
+            "- The search engine will provide results inside:\n"
             "  <information> ... </information>\n"
-            "- You can search as many times as needed.\n"
-            "- When ready, give the final concise answer using:\n"
-            "  <answer> your answer </answer>\n\n"
-            "Example:\n"
-            "<think> I need to find the capital of China. </think>\n"
-            "<search> capital of China </search>\n"
-            "<information> Beijing is the capital of China. </information>\n"
-            "<think> The capital is Beijing. </think>\n"
-            "<answer> Beijing </answer>"
+            "- You may repeat the <think> and <search> steps as many times as needed.\n"
+            "- When you are ready, give your final answer in:\n"
+            "  <answer> your answer here </answer>"
         )
 
     def execute_action(self, action: str):
