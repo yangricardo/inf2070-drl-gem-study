@@ -28,13 +28,9 @@ class EpisodeTrackingWrapper(EnvWrapper):
     def reset(
         self, seed: Optional[int] = None
     ) -> Tuple[WrapperObsType, dict[str, Any]]:
-        prev_ep_step_counter = self.step_counter
-        prev_ep_step_cumulative_rewards = self.cumulative_rewards
         obs, info = self.env.reset(seed)
         self.step_counter = 0
         self.cumulative_rewards = 0.0
         info["step_counter"] = self.step_counter
-        info["prev_ep_step_counter"] = prev_ep_step_counter
         info["cumulative_rewards"] = self.cumulative_rewards
-        info["prev_ep_cumulative_rewards"] = prev_ep_step_cumulative_rewards
         return obs, info

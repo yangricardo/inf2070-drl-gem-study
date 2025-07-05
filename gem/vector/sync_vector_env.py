@@ -43,7 +43,10 @@ class SyncVectorEnv(VectorEnv):
                 ) = self.envs[i].step(action)
 
                 if self._terminations[i] or self._truncations[i]:
+                    prev_ep_infos = deepcopy(self._env_infos[i])
                     self._env_obs[i], self._env_infos[i] = self.envs[i].reset()
+                    for key, value in prev_ep_infos.items():
+                        self._env_infos[i][f"prev_ep_{key}"] = value
             else:
                 raise ValueError
 

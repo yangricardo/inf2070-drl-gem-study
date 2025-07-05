@@ -221,9 +221,12 @@ if __name__ == "__main__":
     """Run with:
     python -m eval.eval --env_name ta:GuessTheNumber-v0 --model_name Qwen/Qwen3-0.6B
     python -m eval.eval --env_name ta:GuessTheNumber-v0 --model_name Qwen/Qwen3-0.6B --num_episodes 20 --batch_size 5
-    python -m eval.eval --env_name eval:MATH500 --model_name GAIR/ToRL-1.5Bx
+    python -m eval.eval --env_name eval:MATH500 --model_name GAIR/ToRL-1.5B
     python -m eval.eval --env_name eval:MATH500 --model_name GAIR/ToRL-1.5B --num_episodes 20 --batch_size 5 --wrappers "'python_tool,concat_with_action,episode_tracking'"
     python -m eval.eval --env_name eval:MATH500 --model_name GAIR/ToRL-1.5B --num_episodes 20 --batch_size 5 --max_tokens 100
     python -m eval.eval --env_name eval:MATH500 --model_name VerlTool/torl-deep_math-fsdp_agent-qwen2.5-math-1.5b-grpo-n16-b128-t1.0-lr1e-6-320-step --num_episodes 20 --batch_size 5 --max_tokens 100
     python -m eval.eval --use_dummy_policy --num_episodes 20 --batch_size 5
+    python -m eval.eval --env_name eval:MATH500 --num_episodes 20 --batch_size 5 --wrappers "'python_tool,concat_with_action,episode_tracking'"  --use_dummy_policy
+    python -m eval.eval --env_name eval:MATH500 --num_episodes 20 --batch_size 5 --wrappers "'python_tool,concat_with_action,episode_tracking'"
+    python -m eval.eval --env_name dummy:DummyEnv --num_episodes 20 --batch_size 5 --wrappers "'python_tool,concat_with_action,episode_tracking'"
     """
