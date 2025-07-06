@@ -38,7 +38,7 @@ class SearchTool(BaseTool):
         else:
             return "", "", False
 
-    def _search(self, query: str):
+    def _search(self, query: str) -> Tuple[str, bool]:
         """
         Perform a search using the configured search_url.
         Returns a formatted string of search results.
@@ -59,9 +59,9 @@ class SearchTool(BaseTool):
             )
             response.raise_for_status()
             result = msgspec.msgpack.decode(response.content)["result"]
-            return self._passages2string(result)
+            return self._passages2string(result), False
         except Exception as e:
-            return f"[SearchTool Error: {e}]"
+            return f"[SearchTool Error: {e}]", True
 
     def _passages2string(self, result):
         format_reference = ""
@@ -104,8 +104,9 @@ class SearchTool(BaseTool):
             # observation = "No valid search query found. Please provide your query within <search>...</search> tags."
             observation = ""
             valid = False
+            has_error = True
         else:
-            search_result = self._search(parsed_query)
+            search_result, has_error = self._search(parsed_query)
             observation = f"\n\n<information>{search_result}</information>\n\n"
             valid = True
-        return valid, observation, parsed_action
+        return valid, has_error, observation, parsed_action

@@ -40,12 +40,19 @@ class QaEnv(Env):
         answer_key: str = "answer",
         seed: int = 0,
         extract_boxed: bool = False,
+        unformatted_penalty: float = -0.1,
+        formatted_reward: float = 0.0,
+        is_correct_reward: float = 1.0,
+        load_from_cache_file: bool = True,
         **_,
     ):
         super().__init__()
         self.seed = seed
         self.question_key = question_key
         self.answer_key = answer_key
+        self.unformatted_penalty = unformatted_penalty
+        self.formatted_reward = formatted_reward
+        self.is_correct_reward = is_correct_reward
         if dataset is None:
             dataset = load_dataset(dataset_name)
             logger.info(f"Loaded: {dataset=}")
@@ -61,7 +68,7 @@ class QaEnv(Env):
                 )
         assert isinstance(dataset, Dataset), f"Expected a Dataset, got {type(dataset)}"
         apply_prompt_func = partial(apply_prompt, question_key=question_key)
-        dataset = dataset.map(apply_prompt_func)
+        dataset = dataset.map(apply_prompt_func, load_from_cache_file=load_from_cache_file)
         self.dataset = dataset.shuffle(seed=self.seed)
         self.idx = 0
         self.epoch = 0
@@ -74,13 +81,15 @@ class QaEnv(Env):
     def step(
         self, action: str
     ) -> Tuple[str, SupportsFloat, bool, bool, dict[str, Any]]:
+        info = {"is_correct": False}
         model_answer = self.extractor(action)
         if model_answer is None:
-            reward = -0.1
+            reward = self.unformatted_penalty
         else:
             is_correct = self.check_correct(model_answer, self.answer)
-            reward = 1.0 if is_correct else 0.0
-        return TERMINAL_STATE, reward, True, True, {}
+            reward = self.is_correct_reward if is_correct else self.formatted_reward
+            info["is_correct"] = is_correct
+        return TERMINAL_STATE, reward, True, True, info
 
     def reset(self, seed: Optional[None] = None) -> Tuple[str, dict[str, Any]]:
         """Sample a question from the dataset."""
