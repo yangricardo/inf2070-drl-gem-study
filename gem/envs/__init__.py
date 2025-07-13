@@ -161,10 +161,30 @@ register(
 
 # Register math dataset environments
 
+import time
+import logging
+from datasets import load_dataset
+_wait_time = 5
+_num_retries = 10
+
+for i in range(_num_retries):
+    # Retry in case network error when accessing HF.
+    try:
+        math_12k_dataset = load_dataset("axon-rl/MATH-12k", split="train")
+        break
+    except Exception as e:
+        # In case of timeout.
+        time.sleep(_wait_time)
+        _wait_time *= 1.2
+        logging.warning(f"{e}")
+        logging.warning(f"Try {i}/{_num_retries}. Trying again...")
+else:
+    raise RuntimeError("Cannot load axon-rl/MATH-12k dataset")
 register(
     "math:Math12K",
     "gem.envs.math_env:MathEnv",
-    dataset_name="axon-rl/MATH-12k",
+    # dataset_name="axon-rl/MATH-12k",
+    dataset=math_12k_dataset,
     question_key="problem",
     answer_key="answer",
 )
