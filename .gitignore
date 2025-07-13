@@ -191,3 +191,7 @@ scripts
 
 # neovim
 .nvim/
+
+# misc
+.DS_Store
+experiments/
