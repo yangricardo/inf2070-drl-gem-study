@@ -1,8 +1,10 @@
 import copy
 import os
 import shlex
+import shutil
 import subprocess
 import sys
+import tempfile
 import uuid
 from tempfile import NamedTemporaryFile
 from typing import List, Optional
@@ -112,15 +114,22 @@ def subprocess_run(
         del env["PYTHONPATH"]
 
     if len(code) < CLI_ARG_SIZE_LIMIT:
+        temp_dir = tempfile.mkdtemp(dir=".")
         cmd_list.extend(["python", "-c", code])
-        result = subprocess.run(
-            cmd_list,
-            input=stdin.encode() if stdin else None,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            env=env,
-            timeout=timeout,
-        )
+        try:
+            result = subprocess.run(
+                cmd_list,
+                cwd=temp_dir,
+                input=stdin.encode() if stdin else None,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                env=env,
+                timeout=timeout,
+            )
+        except Exception as e:
+            shutil.rmtree(temp_dir)
+            raise e
+        shutil.rmtree(temp_dir)
     else:
         with NamedTemporaryFile(
             mode="wb", prefix=uuid.uuid4().hex, suffix=".py"
@@ -189,6 +198,6 @@ def run_python(
         run_success, stdout, stderr = (
             False,
             "",
-            f"Execution timed out after {timeout} seconds.\n",
+            f"\nExecution timed out after {timeout} seconds.",
         )
     return run_success, stdout, stderr
