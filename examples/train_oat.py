@@ -1,3 +1,17 @@
+# Copyright 2025 AxonRL Team. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Entry script of using OAT to RL-tune LLM agents on GEM environments.
 """
@@ -90,7 +104,7 @@ class Args(PPOArgs):
 
     # Reward settings
     gamma: float = 1.0  # Discount factor for Monte Carlo returns
-    norm_adv: bool = False
+    norm_return: bool = False
 
     # Evaluation settings
     eval_prompt_template: Literal["qwen3_general"] = "qwen3_general"
@@ -590,7 +604,7 @@ class Learner(PPOLearner):
         del response_masks
         # Return without baseline
         advantages = rewards.sum(-1)
-        if self.args.norm_adv:
+        if self.args.norm_return:
             local_sum = advantages.sum()
             local_square_sum = (advantages**2).sum()
             local_num = torch.tensor(
