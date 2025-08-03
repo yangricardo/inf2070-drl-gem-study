@@ -1,18 +1,18 @@
 # Reinforcement Learning with GEM
 
-In this document we demonstrate how to integrate various LLM RL frameworks with GEM to train your own agents! One of our goals is to seamlessly integrate all popular frameworks so that researchers can freely select their favorite ones and **easily compare with others' results even if they use different frameworks**. We believe this is the core mission for a suite standardized environments like what we are building.
+In this document, we demonstrate how to integrate various LLM reinforcement learning (RL) frameworks with GEM to train your own agents. One of our key goals is to enable seamless integration with all major frameworks, allowing researchers to use their preferred tools while **easily comparing results across different setups**. We believe this level of interoperability is central to the mission of building a standardized suite of environments.
 
-As for now, we support the following training frameworks (alphabet order):
+As of now, we support the following training frameworks (in alphabetical order):
 
 - [x] [Oat](https://github.com/sail-sg/oat)
 - [x] [Verl](https://github.com/volcengine/verl)
 
-To be supported soon (alphabet order):
+Planned for upcoming support (in alphabetical order):
 
 - [ ] [ROLL](https://github.com/alibaba/ROLL)
 - [ ] [OpenRLHF](https://github.com/OpenRLHF/OpenRLHF)
 
-The learning curve comparison of two representative environments is shown below, where we can observe their curves are almost aligned.
+The learning curve comparison for two representative environments is shown below, where we observe that their curves are nearly aligned—demonstrating our goal of achieving interoperability.
 
 <p align="center"><img src="./comparison.png" width="70%" /></p>
 
