@@ -65,7 +65,7 @@ class PythonCodeTool(BaseTool):
             "Solve the above problem step by step. You now have the ability to selectively write "
             "executable Python code to enhance your reasoning process. The Python code will be executed by an external sandbox, "
             'and the output (after "Code execution result: ") is returned to aid your reasoning and help you arrive at the final answer. '
-            "The Python code should be complete scripts, including necessary imports, wrapped within <python>...</python> tags or using ```python...``` code block."
+            "The Python code should be complete scripts, including necessary imports, wrapped within <python>...</python> tags or using ```python...``` code block. "
             "Return your final answer within \\boxed{}."
         )
 

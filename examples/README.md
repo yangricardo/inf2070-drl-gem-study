@@ -1,5 +1,21 @@
 # Reinforcement Learning with GEM
 
+In this document we demonstrate how to integrate various LLM RL frameworks with GEM to train your own agents! One of our goals is to seamlessly integrate all popular frameworks so that researchers can freely select their favorite ones and **easily compare with others' results even if they use different frameworks**. We believe this is the core mission for a suite standardized environments like what we are building.
+
+As for now, we support the following training frameworks (alphabet order):
+
+- [x] [Oat](https://github.com/sail-sg/oat)
+- [x] [Verl](https://github.com/volcengine/verl)
+
+To be supported soon (alphabet order):
+
+- [ ] [ROLL](https://github.com/alibaba/ROLL)
+- [ ] [OpenRLHF](https://github.com/OpenRLHF/OpenRLHF)
+
+The learning curve comparison of two representative environments is shown below, where we can observe their curves are almost aligned.
+
+<p align="center"><img src="./comparison.png" width="70%" /></p>
+
 ## Training with Oat
 [Oat](https://github.com/sail-sg/oat) is natively supported as the RL framework to integrate with GEM.
 Before you start the experiments, you could install the library using:
@@ -413,10 +429,12 @@ python train.py \
     --wb-run-name oat-qwen3-4b-base-code:PrimeIntellect15k \
     --wb_project gem \
 ```
+
+</details>
+
 ## Training with VeRL
 [VeRL](https://github.com/volcengine/verl) can be easily integrated with GEM to train LLM agents. In this section, we first provide the installation guide then give a few examples.
 
-</details>
 
 ```bash
 # recommend python==3.10
