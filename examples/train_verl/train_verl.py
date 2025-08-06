@@ -286,8 +286,8 @@ class ReinforceGEMTrainer(RayPPOTrainer):
         )
         # [GEM Notes] Instantiate vectorized environment.
         self.env = gem.make_vec(
-            self.config.actor_rollout_ref.env.env_id,
-            num_envs=self.config.actor_rollout_ref.env.num_env,
+            [self.config.actor_rollout_ref.env.env_id]
+            * self.config.actor_rollout_ref.env.num_env,
             vec_kwargs=[
                 {"seed": seed + j}
                 for j in range(self.config.actor_rollout_ref.env.num_env)

@@ -187,8 +187,7 @@ class Actor(PPOActor):
 
         # Instantiate vectorized environment.
         self.env = gem.make_vec(
-            self.args.env_id,
-            num_envs=self.args.num_env,
+            [self.args.env_id] * self.args.num_env,
             vec_kwargs=[{"seed": self.args.seed + j} for j in range(self.args.num_env)],
             wrappers=wrappers,
             async_mode=self.args.async_env,

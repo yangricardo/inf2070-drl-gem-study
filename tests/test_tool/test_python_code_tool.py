@@ -91,8 +91,7 @@ def test_episode(env_name: str = "game:GuessTheNumber-v0"):
     tool_env_wrapper = partial(ToolEnvWrapper, tools=[tool], max_tool_uses=3)
     chat_wrapper = partial(WRAPPER_FACTORY["concat_chat"], tokenizer=tokenizer)
     ta_vec_env = gem.make_vec(
-        env_name,
-        num_envs=num_envs,
+        [env_name] * num_envs,
         wrappers=[tool_env_wrapper, chat_wrapper],
         async_mode=False,
         max_turns=3,
@@ -110,8 +109,7 @@ def test_episode(env_name: str = "game:GuessTheNumber-v0"):
     tool_env_wrapper = partial(ToolEnvWrapper, tools=[tool], max_tool_uses=3)
     chat_wrapper = partial(WRAPPER_FACTORY["concat_chat"], tokenizer=tokenizer)
     ta_vec_env = gem.make_vec(
-        env_name,
-        num_envs=num_envs,
+        [env_name] * num_envs,
         wrappers=[tool_env_wrapper, chat_wrapper],
         async_mode=True,
         max_turns=3,
@@ -190,8 +188,7 @@ def test_llm_episode(
     tool_env_wrapper = partial(ToolEnvWrapper, tools=[tool], max_tool_uses=3)
     chat_wrapper = partial(WRAPPER_FACTORY["concat_chat"], tokenizer=tokenizer)
     ta_vec_env = gem.make_vec(
-        env_name,
-        num_envs=num_envs,
+        [env_name] * num_envs,
         wrappers=[tool_env_wrapper, chat_wrapper],
         async_mode=False,
         max_turns=3,
@@ -208,8 +205,7 @@ def test_llm_episode(
     tool_env_wrapper = partial(ToolEnvWrapper, tools=[tool], max_tool_uses=3)
     chat_wrapper = partial(WRAPPER_FACTORY["concat_chat"], tokenizer=tokenizer)
     ta_vec_env = gem.make_vec(
-        env_name,
-        num_envs=num_envs,
+        [env_name] * num_envs,
         wrappers=[tool_env_wrapper, chat_wrapper],
         async_mode=True,
         max_turns=3,
@@ -456,6 +452,6 @@ if __name__ == "__main__":
     python -m tests.test_tool.test_python_code_tool llm_episode --env_name game:GuessTheNumber-v0 --model_name Qwen/Qwen3-0.6B-Base
     python -m tests.test_tool.test_python_code_tool episode --env_name eval:MATH500
     python -m tests.test_tool.test_python_code_tool llm_episode --env_name eval:MATH500 --model_name Qwen/Qwen3-0.6B-Base
-    python -m tests.test_tool.test_python_code_tool evaluate 
+    python -m tests.test_tool.test_python_code_tool evaluate
     python -m tests.test_tool.test_python_code_tool benchmark --model_name
     """
