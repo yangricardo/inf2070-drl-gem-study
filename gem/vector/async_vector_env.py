@@ -16,7 +16,7 @@
 
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
-from typing import Any, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
@@ -41,32 +41,37 @@ def step_reset_env(action, env, autoreset_mode, autoreset_env):
 
 
 class AsyncVectorEnv(VectorEnv):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.thread_pool_executer = ThreadPoolExecutor(max_workers=self.num_envs)
 
-    def step(self, actions: Sequence[ActType]) -> Tuple[
+    def step(self, actions: Union[Sequence[ActType], Dict[int, ActType]]) -> Tuple[
         Sequence[ObsType],
         ArrayType,
         ArrayType,
         ArrayType,
         dict[str, Any],
     ]:
+        if isinstance(actions, Sequence):
+            assert len(actions) == self.num_envs
+            actions = {i: action for i, action in enumerate(actions)}
+
         results = list(
             self.thread_pool_executer.map(
                 lambda args: step_reset_env(*args),
                 list(
                     zip(
-                        actions,
-                        self.envs,
-                        [self.autoreset_mode] * self.num_envs,
-                        self._autoreset_envs,
+                        actions.values(),
+                        [self.envs[i] for i in actions.keys()],
+                        [self.autoreset_mode] * len(actions),
+                        [self._autoreset_envs[i] for i in actions.keys()],
                     )
                 ),
             )
         )
-        for i, (obs, reward, terminated, truncated, info) in enumerate(results):
+        for i, (obs, reward, terminated, truncated, info) in zip(
+            actions.keys(), results
+        ):
             self._env_obs[i] = obs
             self._rewards[i] = reward
             self._terminations[i] = terminated
@@ -75,11 +80,11 @@ class AsyncVectorEnv(VectorEnv):
         self._autoreset_envs = np.logical_or(self._terminations, self._truncations)
 
         return (
-            deepcopy(self._env_obs),
-            np.copy(self._rewards),
-            np.copy(self._terminations),
-            np.copy(self._truncations),
-            deepcopy(self._env_infos),
+            [deepcopy(self._env_obs[i]) for i in actions.keys()],
+            np.copy(self._rewards)[list(actions.keys())],
+            np.copy(self._terminations)[list(actions.keys())],
+            np.copy(self._truncations)[list(actions.keys())],
+            [deepcopy(self._env_infos[i]) for i in actions.keys()],
         )
 
     def reset(

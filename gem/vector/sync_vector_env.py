@@ -15,7 +15,7 @@
 """Synchronous (for loop) vectorized environment execution."""
 
 from copy import deepcopy
-from typing import Any, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
@@ -24,15 +24,18 @@ from gem.vector.vector_env import ArrayType, AutoresetMode, VectorEnv
 
 
 class SyncVectorEnv(VectorEnv):
-
-    def step(self, actions: Sequence[ActType]) -> Tuple[
+    def step(self, actions: Union[Sequence[ActType], Dict[int, ActType]]) -> Tuple[
         Sequence[ObsType],
         ArrayType,
         ArrayType,
         ArrayType,
-        dict[str, Any],
+        Dict[str, Any],
     ]:
-        for i, action in enumerate(actions):
+        if isinstance(actions, Sequence):
+            assert len(actions) == self.num_envs
+            actions = {i: action for i, action in enumerate(actions)}
+
+        for i, action in actions.items():
             if self.autoreset_mode == AutoresetMode.NEXT_STEP:
                 if self._autoreset_envs[i]:
                     self._env_obs[i], self._env_infos[i] = self.envs[i].reset()
@@ -63,13 +66,22 @@ class SyncVectorEnv(VectorEnv):
 
         self._autoreset_envs = np.logical_or(self._terminations, self._truncations)
 
+        # return after indexing with actions.keys()
         return (
-            deepcopy(self._env_obs),
-            np.copy(self._rewards),
-            np.copy(self._terminations),
-            np.copy(self._truncations),
-            deepcopy(self._env_infos),
+            [deepcopy(self._env_obs[i]) for i in actions.keys()],
+            np.copy(self._rewards)[list(actions.keys())],
+            np.copy(self._terminations)[list(actions.keys())],
+            np.copy(self._truncations)[list(actions.keys())],
+            [deepcopy(self._env_infos[i]) for i in actions.keys()],
         )
+
+        # return (
+        #     deepcopy(self._env_obs),
+        #     np.copy(self._rewards),
+        #     np.copy(self._terminations),
+        #     np.copy(self._truncations),
+        #     deepcopy(self._env_infos),
+        # )
 
     def reset(
         self, seed: Optional[Union[int, Sequence[int]]] = None
