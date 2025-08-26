@@ -112,15 +112,16 @@ def test_openai(
         if use_open_router
         else os.environ.get("OPENAI_API_KEY")
     )
+    _base_url = (
+        os.environ.get("OPENROUTER_BASE_URL")
+        if use_open_router
+        else os.environ.get("OPENROUTER_API_KEY")
+    )
     assert (
         _api_key
     ), "Please provide valid api key via env var: OPENROUTER_API_KEY | OPENAI_API_KEY"
     client = OpenAI(
-        base_url=(
-            "https://openrouter.ai/api/v1"
-            if use_open_router
-            else "https://api.openai.com/v1"
-        ),
+        base_url=_base_url,
         api_key=_api_key,
     )
 
@@ -147,8 +148,12 @@ def test_openai(
     with open("tests/test_env/terminal_agent_prompt.md", "r") as file:
         SYSTEM_PROMPT = file.read()
 
+    # claude does not support developer prompt
     messages = [
-        {"role": "developer", "content": SYSTEM_PROMPT},
+        {
+            "role": "system" if "claude" in model else "developer",
+            "content": SYSTEM_PROMPT,
+        },
         {
             "role": "user",
             "content": obs,
