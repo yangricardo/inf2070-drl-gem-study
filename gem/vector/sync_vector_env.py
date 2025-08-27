@@ -24,7 +24,9 @@ from gem.vector.vector_env import ArrayType, AutoresetMode, VectorEnv
 
 
 class SyncVectorEnv(VectorEnv):
-    def step(self, actions: Union[Sequence[ActType], Dict[int, ActType]]) -> Tuple[
+    def step(
+        self, actions: Union[Sequence[ActType], Dict[int, ActType]]
+    ) -> Tuple[
         Sequence[ObsType],
         ArrayType,
         ArrayType,
@@ -35,6 +37,7 @@ class SyncVectorEnv(VectorEnv):
             assert len(actions) == self.num_envs
             actions = {i: action for i, action in enumerate(actions)}
 
+        active_env_indices = list(actions.keys())
         for i, action in actions.items():
             if self.autoreset_mode == AutoresetMode.NEXT_STEP:
                 if self._autoreset_envs[i]:
@@ -66,22 +69,13 @@ class SyncVectorEnv(VectorEnv):
 
         self._autoreset_envs = np.logical_or(self._terminations, self._truncations)
 
-        # return after indexing with actions.keys()
         return (
             [deepcopy(self._env_obs[i]) for i in actions.keys()],
-            np.copy(self._rewards)[list(actions.keys())],
-            np.copy(self._terminations)[list(actions.keys())],
-            np.copy(self._truncations)[list(actions.keys())],
+            np.copy(self._rewards)[active_env_indices],
+            np.copy(self._terminations)[active_env_indices],
+            np.copy(self._truncations)[active_env_indices],
             [deepcopy(self._env_infos[i]) for i in actions.keys()],
         )
-
-        # return (
-        #     deepcopy(self._env_obs),
-        #     np.copy(self._rewards),
-        #     np.copy(self._terminations),
-        #     np.copy(self._truncations),
-        #     deepcopy(self._env_infos),
-        # )
 
     def reset(
         self, seed: Optional[Union[int, Sequence[int]]] = None
@@ -90,9 +84,9 @@ class SyncVectorEnv(VectorEnv):
             seed = [None for _ in range(self.num_envs)]
         elif isinstance(seed, int):
             seed = [seed + i for i in range(self.num_envs)]
-        assert (
-            len(seed) == self.num_envs
-        ), f"If seeds are passed as a list the length must match num_envs={self.num_envs} but got length={len(seed)}."
+        assert len(seed) == self.num_envs, (
+            f"If seeds are passed as a list the length must match num_envs={self.num_envs} but got length={len(seed)}."
+        )
 
         for i, (env, single_seed) in enumerate(zip(self.envs, seed)):
             self._env_obs[i], self._env_infos[i] = env.reset(seed=single_seed)

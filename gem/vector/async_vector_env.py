@@ -45,17 +45,20 @@ class AsyncVectorEnv(VectorEnv):
         super().__init__(*args, **kwargs)
         self.thread_pool_executer = ThreadPoolExecutor(max_workers=self.num_envs)
 
-    def step(self, actions: Union[Sequence[ActType], Dict[int, ActType]]) -> Tuple[
+    def step(
+        self, actions: Union[Sequence[ActType], Dict[int, ActType]]
+    ) -> Tuple[
         Sequence[ObsType],
         ArrayType,
         ArrayType,
         ArrayType,
-        dict[str, Any],
+        Dict[str, Any],
     ]:
         if isinstance(actions, Sequence):
             assert len(actions) == self.num_envs
             actions = {i: action for i, action in enumerate(actions)}
 
+        active_env_indices = list(actions.keys())
         results = list(
             self.thread_pool_executer.map(
                 lambda args: step_reset_env(*args),
@@ -81,9 +84,9 @@ class AsyncVectorEnv(VectorEnv):
 
         return (
             [deepcopy(self._env_obs[i]) for i in actions.keys()],
-            np.copy(self._rewards)[list(actions.keys())],
-            np.copy(self._terminations)[list(actions.keys())],
-            np.copy(self._truncations)[list(actions.keys())],
+            np.copy(self._rewards)[active_env_indices],
+            np.copy(self._terminations)[active_env_indices],
+            np.copy(self._truncations)[active_env_indices],
             [deepcopy(self._env_infos[i]) for i in actions.keys()],
         )
 
@@ -94,9 +97,9 @@ class AsyncVectorEnv(VectorEnv):
             seed = [None for _ in range(self.num_envs)]
         elif isinstance(seed, int):
             seed = [seed + i for i in range(self.num_envs)]
-        assert (
-            len(seed) == self.num_envs
-        ), f"If seeds are passed as a list the length must match num_envs={self.num_envs} but got length={len(seed)}."
+        assert len(seed) == self.num_envs, (
+            f"If seeds are passed as a list the length must match num_envs={self.num_envs} but got length={len(seed)}."
+        )
 
         for i, (env, single_seed) in enumerate(zip(self.envs, seed)):
             self._env_obs[i], self._env_infos[i] = env.reset(seed=single_seed)
