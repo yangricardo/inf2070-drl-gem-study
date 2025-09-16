@@ -46,6 +46,14 @@ WRAPPER_FACTORY = {
         tool_success_reward=0.0,
         max_tool_uses=5,
     ),
+    "python_tool_execution_error_reward_last_line_error": partial(
+        ToolEnvWrapper,
+        tools=[PythonCodeTool(timeout=5, keep_error_last_line=True)],
+        tool_reward=0.0,
+        tool_success_reward=0.0,
+        tool_execute_error_reward=-0.1,
+        max_tool_uses=5,
+    ),
     "search_tool": partial(
         ToolEnvWrapper,
         tools=[SearchTool(topk=3, timeout=5)],
@@ -99,7 +107,10 @@ def get_wrapper_fns(wrappers: str, tokenizer=None):
         print(f"Wrappers: {wrapper_fns}")
         for w in wrappers:
             wrapper_fn = WRAPPER_FACTORY[w]
-            if w in TOKENIZER_REQUIRED and tokenizer is not None:
-                wrapper_fn = partial(wrapper_fn, tokenizer=tokenizer)
+            if w in TOKENIZER_REQUIRED:
+                if tokenizer is not None:
+                    wrapper_fn = partial(wrapper_fn, tokenizer=tokenizer)
+                else:
+                    raise ValueError(f"Tokenizer is required for wrapper {w}")
             wrapper_fns.append(wrapper_fn)
     return wrapper_fns

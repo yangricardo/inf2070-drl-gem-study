@@ -23,7 +23,7 @@ class LanguageGameReward:
     # the reward for failing the task, e.g. hit a mine in Minesweeper
     fail_reward: float = 0.0  # -0.02
     # the reward for an invalid action, e.g. guessing a number outside the range in Guess the Number
-    invalid_action_reward: float = 0.0
+    invalid_action_reward: float = -0.05
     # the reward for a format error, e.g. cannot parse the action
     format_error_reward: float = -0.1
 
