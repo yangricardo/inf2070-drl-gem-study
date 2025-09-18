@@ -72,6 +72,7 @@ class CodeEnv(Env):
         self.dataset_iter = iter(self.dataset)
         self.epoch = 0
 
+        self.max_workers = max_workers
         self.thread_pool_executer = ThreadPoolExecutor(max_workers=max_workers)
         self.max_tests = max_tests
         self.verbose = verbose
@@ -169,3 +170,18 @@ class CodeEnv(Env):
             if gt.strip() != pred.strip():
                 return False
         return True
+
+    def __getstate__(self) -> dict[str, Any]:
+        """Return the state of the object for pickling."""
+        state = self.__dict__.copy()
+        # Remove the unpicklable attributes
+        del state['thread_pool_executer']
+        del state['dataset_iter']
+        return state
+
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        """Restore the state of the object from a pickled state."""
+        self.__dict__.update(state)
+        # Re-initialize the unpicklable attributes
+        self.thread_pool_executer = ThreadPoolExecutor(max_workers=self.max_workers)
+        self.dataset_iter = iter(self.dataset)
