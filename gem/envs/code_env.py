@@ -171,17 +171,12 @@ class CodeEnv(Env):
                 return False
         return True
 
-    def __getstate__(self) -> dict[str, Any]:
-        """Return the state of the object for pickling."""
-        state = self.__dict__.copy()
-        # Remove the unpicklable attributes
-        del state['thread_pool_executer']
-        del state['dataset_iter']
-        return state
+    def get_state(self) -> dict[str, Any]:
+        return {
+            "first_obs": self.first_obs,
+            "tests": self.tests,
+        }
 
-    def __setstate__(self, state: dict[str, Any]) -> None:
-        """Restore the state of the object from a pickled state."""
-        self.__dict__.update(state)
-        # Re-initialize the unpicklable attributes
-        self.thread_pool_executer = ThreadPoolExecutor(max_workers=self.max_workers)
-        self.dataset_iter = iter(self.dataset)
+    def set_state(self, state: dict[str, Any]) -> None:
+        self.first_obs = state["first_obs"]
+        self.tests = state["tests"]
