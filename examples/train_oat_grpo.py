@@ -327,13 +327,12 @@ class Actor(PPOActor):
 
     def collect_experience_multiple(self, env, min_steps: int, num_samples: int):
         start_time = time.time()
-        try:
-            deepcopy(env.envs[0])
-            env_is_picklable = True
-        except TypeError:
-            env_is_picklable = False
+        # If env has get_state and set_state methods then use these, otherwise deepcopy the env
+        env_has_getset_state =(
+            hasattr(env.envs[0], "get_state") and hasattr(env.envs[0], "set_state")
+        )
         logging.info(
-            f"Actor-{self.actor_id}: {env_is_picklable=}"
+            f"Actor-{self.actor_id}: {env_has_getset_state=}"
         )
 
         # for in-progress episodes
@@ -362,18 +361,18 @@ class Actor(PPOActor):
         max_ep_length = 0
 
         def get_env_for_storing(env_i, apply_deepcopy=True):
-            if env_is_picklable:
-                state = env_i
-            else:
+            if env_has_getset_state:
                 state = env_i.get_state()
+            else:
+                state = env_i
             return deepcopy(state) if apply_deepcopy else state
         
         def set_env(envs, i, state, apply_deepcopy=True):
             state_ = deepcopy(state) if apply_deepcopy else state
-            if env_is_picklable:
-                envs[i] = state_
-            else:
+            if env_has_getset_state:
                 envs[i].set_state(state_)
+            else:
+                envs[i] = state_
 
         def top_up_queue(env_to_use):
             if len(env_queue) == 0:
