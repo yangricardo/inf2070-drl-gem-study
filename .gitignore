@@ -1,8 +1,6 @@
 oat-output
 wandb
 tasks
-oat
-cmd
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
