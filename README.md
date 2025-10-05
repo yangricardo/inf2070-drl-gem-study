@@ -9,6 +9,8 @@
 [![Documentation](https://img.shields.io/badge/Documentation-blue?style=for-the-badge&logo=readthedocs&logoColor=white)](https://axon-rl.github.io/gem/)
 [![PyPI - Version](https://img.shields.io/pypi/v/gem-llm.svg?style=for-the-badge)](https://pypi.org/project/gem-llm)
 
+</div>
+
 ## Overview
 
 We’re entering the **era of experience**, where large language models (LLMs) learn not just from static datasets, but from *interactive experience* gathered in complex, expressive environments.
