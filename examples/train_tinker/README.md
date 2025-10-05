@@ -29,6 +29,8 @@ pip install -e .
 ```
 
 ### Using Tinker Cookbook
+> Find the training curves in [[📈 WandB Logs](https://wandb.ai/cameron_chen/gem-tinker-cookbook)].
+
 To train agents with the Tinker Cookbook, we implemented an adaption layer (`tinker_cookbook_adapter.py`) that exposes a GEM-compatible interface. The entry point is `tinker_cookbook_train.py`.
 
 **Example 1: Training on Math Environments**
@@ -48,7 +50,7 @@ python -m examples.train_tinker.tinker_cookbook_train env_id=rg:simple_equations
 ```
 
 ### Using Tinker
-[WandB Logs](https://wandb.ai/lkevinzc/gem-tinker_train).
+> Find the training curves in [[📈 WandB Logs](https://wandb.ai/lkevinzc/gem-tinker_train)]
 
 We can also directly integrate GEM with Tinker, bypassing the abstraction layer defined by tinker-cookbook. The entry point is `tinker_train.py`, which implements REINFORCE with Return Batch Normalization (introduced in our [paper](https://arxiv.org/pdf/2510.01051)).
 
