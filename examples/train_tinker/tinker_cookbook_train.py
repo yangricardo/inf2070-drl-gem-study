@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""GEM ❤️ Tinker.
+
+A script for training agents on GEM environments with Tinker-Cookbook.
+"""
+
 import asyncio
 from datetime import datetime
 
@@ -19,7 +24,7 @@ import chz
 from tinker_cookbook import cli_utils, model_info
 from tinker_cookbook.rl.train import AsyncConfig, Config, main
 
-from .gem_adapter import GemDatasetBuilder
+from .tinker_cookbook_adapter import GemDatasetBuilder
 
 
 @chz.chz

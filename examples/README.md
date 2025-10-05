@@ -9,7 +9,7 @@ We currently support integration with the following RL frameworks:
 - [x] [Verl](https://github.com/volcengine/verl)
 - [x] [OpenRLHF](https://github.com/OpenRLHF/OpenRLHF)
 - [x] [RL2](https://github.com/ChenmienTan/RL2)
-- [x] [Tinker](https://thinkingmachines.ai/tinker/) and [Tinker-Cookbook](https://github.com/thinking-machines-lab/tinker-cookbook)
+- [x] [Tinker](https://thinkingmachines.ai/tinker/) and [Tinker Cookbook](https://github.com/thinking-machines-lab/tinker-cookbook)
 
 
 ## Getting Started
