@@ -6,10 +6,10 @@ In this document, we demonstrate how to integrate various LLM reinforcement lear
 
 We currently support integration with the following RL frameworks:
 - [x] [Oat](https://github.com/sail-sg/oat)
+- [x] [Tinker](https://thinkingmachines.ai/tinker/)
 - [x] [Verl](https://github.com/volcengine/verl)
-- [x] [OpenRLHF](https://github.com/OpenRLHF/OpenRLHF)
 - [x] [RL2](https://github.com/ChenmienTan/RL2)
-- [x] [Tinker](https://thinkingmachines.ai/tinker/) and [Tinker Cookbook](https://github.com/thinking-machines-lab/tinker-cookbook)
+- [x] [OpenRLHF](https://github.com/OpenRLHF/OpenRLHF)
 
 
 ## Getting Started
