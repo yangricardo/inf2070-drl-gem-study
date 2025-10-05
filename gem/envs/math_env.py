@@ -18,6 +18,7 @@ import functools
 import logging
 import multiprocessing
 import random
+import warnings
 from typing import Any, Optional, SupportsFloat, Tuple
 
 from datasets import Dataset, DatasetDict, load_dataset
@@ -86,7 +87,7 @@ class MathEnv(Env):
         except multiprocessing.context.TimeoutError:
             is_correct = False
         reward = 1.0 if is_correct else 0
-        return TERMINAL_STATE, reward, True, True, {}
+        return TERMINAL_STATE, reward, True, True, {"correct": is_correct}
 
     def _local_step(
         self, action: str
@@ -100,7 +101,7 @@ class MathEnv(Env):
         else:
             is_correct = res
         reward = 1.0 if is_correct else 0
-        return TERMINAL_STATE, reward, True, True, {}
+        return TERMINAL_STATE, reward, True, True, {"correct": is_correct}
 
     def step(
         self, action: str
@@ -169,6 +170,31 @@ class MathEnv(Env):
     def set_state(self, state: dict[str, Any]) -> None:
         self.first_obs = state["first_obs"]
         self.answer = state["answer"]
+
+    def spawn(self, same_state: bool = False, **kwargs) -> Env:
+        if same_state:
+            child = MathEnv(
+                dataset=self.dataset,
+                question_key=self.question_key,
+                answer_key=self.answer_key,
+                seed=self.seed,
+                use_mp=self.use_mp,
+                **kwargs,
+            )
+            child.set_state(self.get_state())
+        else:
+            child = MathEnv(
+                dataset=self.dataset,
+                question_key=self.question_key,
+                answer_key=self.answer_key,
+                use_mp=self.use_mp,
+                **kwargs,
+            )
+            if child.seed == self.seed:
+                warnings.warn(
+                    "same_state is False but the seed is not changed, which may lead to the same sequence of questions."
+                )
+        return child
 
 
 if __name__ == "__main__":
