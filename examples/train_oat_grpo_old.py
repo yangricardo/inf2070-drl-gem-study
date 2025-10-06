@@ -85,7 +85,6 @@ class Args(PPOArgs):
     keep_generation_failed: bool = False  # Keep episodes with generation failures
 
     critic_type2: Literal["grpo", "drgrpo", "rloo", "ep_level", "none"] = "none"
-    discard_zero_adv: bool = False  # Discard groups which will have all zero advantage when using group-level methods
 
 
 @dataclass
@@ -178,13 +177,26 @@ class Actor(PPOActor):
         all_transitions = []
 
         finished_groups, collection_info = self.collect_experience(
-            self.env, self.args.rollout_batch_size_per_device, self.args.discard_zero_adv
+            self.env, self.args.rollout_batch_size_per_device
         )
         for group in finished_groups:
             all_transitions.extend(self.prepare_group_of_episodes(group))
 
         # logging infos
+        flattened_episodes = []
+        for group in finished_groups:
+            flattened_episodes.extend(group)
         info["actor/num_transitions"] = len(all_transitions)
+        info["actor/mean_episode_len"] = np.mean([len(ep) for ep in flattened_episodes])
+        info["actor/mean_episode_return"] = np.mean(
+            [
+                sum(transition.reward for transition in episode)
+                for episode in flattened_episodes
+            ]
+        )
+        info["actor/mean_episode_success"] = np.mean(
+            [episode[-1].reward == 1 for episode in flattened_episodes]
+        )  # NOTE: assuming success reward is always 1
 
         # update collection info
         info.update(
@@ -215,7 +227,7 @@ class Actor(PPOActor):
             episode_groups = [[ep] for ep in episodes]
         else:
             episode_groups, info = self.collect_experience_multiple(
-                env, min_steps, self.args.num_samples,
+                env, min_steps, self.args.num_samples
             )
         return episode_groups, info
 
@@ -226,7 +238,6 @@ class Actor(PPOActor):
         finished_episodes = []
         finished_episodes_tool_uses = []
         finished_episodes_tool_success = []
-        num_generations = 0
         num_generation_failed = 0
         while True:
             action, extra = self.agent_act(obs)  # type: ignore
@@ -234,7 +245,6 @@ class Actor(PPOActor):
             done = terminated | truncated
 
             for i in range(env.num_envs):
-                num_generations += 1
                 if extra[i]["generation_failed"]:
                     num_generation_failed += 1
                     if self.args.keep_generation_failed:
@@ -284,10 +294,8 @@ class Actor(PPOActor):
                 break
 
         info = {
-            "actor/num_generations": num_generations,
             "actor/num_generation_failed": num_generation_failed,
-            "actor/prop_generation_failed": num_generation_failed / num_generations,
-            "actor/prop_episode_generation_failed": (
+            "actor/prop_generation_failed": (
                 num_generation_failed / len(finished_episodes)
                 if self.args.keep_generation_failed
                 else num_generation_failed
@@ -295,19 +303,6 @@ class Actor(PPOActor):
             ),
             "actor/num_tool_uses": np.mean(finished_episodes_tool_uses),
             "actor/num_tool_success": np.mean(finished_episodes_tool_success),
-            "actor/mean_episode_length": np.mean([len(ep) for ep in finished_episodes]),
-            "actor/max_episode_length": np.max([len(ep) for ep in finished_episodes]),
-            "actor/min_episode_length": np.min([len(ep) for ep in finished_episodes]),
-            "actor/mean_episode_return": np.mean(
-                [
-                    sum(transition.reward for transition in episode)
-                    for episode in finished_episodes
-                ]
-            ),
-            "actor/mean_episode_success": np.mean(
-                [episode[-1].reward == 1 for episode in finished_episodes]
-            ),  # NOTE: assuming success reward is always 1
-            "actor/total_transitions_collected": len(tree.flatten(finished_episodes)),
         }
         if self.step_count % self.args.dump_experience_every == 0:
             _to_dump = {}
@@ -352,19 +347,15 @@ class Actor(PPOActor):
         initial_obs_queue = deque()
 
         # for finished groups
-        finished_groups_nonzero_adv = []
-        finished_groups_nonzero_adv_ids = []
-        finished_groups_nonzero_adv_num_transitions = []
-        finished_groups_zero_adv = []
-        finished_groups_zero_adv_ids = []
-        finished_groups_zero_adv_num_transitions = []
+        finished_groups = []
+        finished_groups_ids = []
         finished_groups_envs = []
+        finished_groups_num_transitions = 0
 
         # for logging
         finished_episodes_tool_uses = []
         finished_episodes_tool_success = []
         num_finished_episodes = 0
-        num_generations = 0
         num_generation_failed = 0
         max_ep_length = 0
 
@@ -389,7 +380,7 @@ class Actor(PPOActor):
                     if (
                         (id not in id_queue)
                         and (id not in ids_in_progress)
-                        and (id not in finished_groups_nonzero_adv_ids + finished_groups_zero_adv_ids)
+                        and (id not in finished_groups_ids)
                     ):
                         break
                 while True:
@@ -416,24 +407,12 @@ class Actor(PPOActor):
             ), f"{num_samples=}\n{len(finished_episodes_groups[id])=}\n{id=}\n{finished_episodes_groups=}"
             if len(finished_episodes_groups[id]) == num_samples:
                 finished_group = finished_episodes_groups.pop(id)
-                # Check if advantages will all be zero
-                ep_0_return = sum(t.reward for t in finished_group[0])
-                all_returns_the_same = all(
-                    sum(t.reward for t in ep) == ep_0_return
-                    for ep in finished_group
-                )
-                if all_returns_the_same:
-                    finished_groups_zero_adv.append(finished_group)
-                    finished_groups_zero_adv_ids.append(deepcopy(id))
-                    finished_groups_zero_adv_num_transitions.append(sum(
-                        [len(ep) for ep in finished_group]
-                    ))
-                else:
-                    finished_groups_nonzero_adv.append(finished_group)
-                    finished_groups_nonzero_adv_ids.append(deepcopy(id))
-                    finished_groups_nonzero_adv_num_transitions.append(sum(
-                        [len(ep) for ep in finished_group]
-                    ))
+                finished_groups.append(finished_group)
+                finished_groups_ids.append(deepcopy(id))
+                num_transitions_added = sum([len(ep) for ep in finished_group])
+            else:
+                num_transitions_added = 0
+            return num_transitions_added
 
         def update_metrics(info_i, done_i):
             finished_episodes_tool_uses.append(
@@ -459,7 +438,6 @@ class Actor(PPOActor):
             obs[i] = deepcopy(initial_obs_in_progress[i])
 
         # Collect episodes
-        break_loop = False
         while True:
             action, extra = self.agent_act(obs)
             next_obs, reward, terminated, truncated, info = env.step(action)
@@ -476,7 +454,9 @@ class Actor(PPOActor):
                             deepcopy(episodes[i])
                         )
                         num_finished_episodes += 1
-                        move_finished_group(ids_in_progress[i])
+                        finished_groups_num_transitions += move_finished_group(
+                            ids_in_progress[i]
+                        )
                         max_ep_length = max(max_ep_length, len(episodes[i]))
                         update_metrics(info[i], done[i])
                         top_up_queue(env.envs[i])
@@ -508,7 +488,9 @@ class Actor(PPOActor):
                             deepcopy(episodes[i])
                         )
                         num_finished_episodes += 1
-                        move_finished_group(ids_in_progress[i])
+                        finished_groups_num_transitions += move_finished_group(
+                            ids_in_progress[i]
+                        )
                         max_ep_length = max(max_ep_length, len(episodes[i]))
                         update_metrics(info[i], done[i])
                         top_up_queue(env.envs[i])
@@ -520,52 +502,20 @@ class Actor(PPOActor):
                         set_env(env.envs, i, envs_in_progress[i], apply_deepcopy=True)
                         next_obs[i] = deepcopy(initial_obs_in_progress[i])
 
-                # Check if collected enough transitions
-                too_many_zero_adv = False
-                if self.args.discard_zero_adv:
-                    if sum(finished_groups_nonzero_adv_num_transitions) >= min_steps:
-                        break_loop = True
-                    elif sum(finished_groups_zero_adv_num_transitions) >= min_steps*2:
-                        # If we have too many zero-advantage transitions, we stop to avoid wasting time
-                        too_many_zero_adv = True
-                        break_loop = True
-                        logging.warning(f"Actor-{self.actor_id} stopping collection early due to too many zero-advantage transitions.")
-                else:
-                    if (sum(finished_groups_nonzero_adv_num_transitions) + sum(finished_groups_zero_adv_num_transitions)) >= min_steps:
-                        break_loop = True
-                if break_loop:
+                if finished_groups_num_transitions >= min_steps:
                     break
-            if break_loop:
+            if finished_groups_num_transitions >= min_steps:
                 break
+
+            #     print(f"{x=}, {i=}, {finished_groups_num_transitions=}")
+            # x += 1
+            # assert x <= 30, f"{x=}, {finished_groups_num_transitions=}, {min_steps=}"
 
             obs = next_obs
 
-        # Collect transitions from all finished trees
-        finished_groups = finished_groups_nonzero_adv[:]
-        finished_groups_ids = finished_groups_nonzero_adv_ids[:]
-        finished_groups_num_transitions = finished_groups_nonzero_adv_num_transitions[:]
-        for group, id, num_transitions in zip(
-            finished_groups_zero_adv,
-            finished_groups_zero_adv_ids,
-            finished_groups_zero_adv_num_transitions,
-        ):
-            finished_groups.append(group)
-            finished_groups_ids.append(id)
-            finished_groups_num_transitions.append(num_transitions)
-            if sum(finished_groups_num_transitions) >= min_steps:
-                break
-
-        # For logging
-        flattened_episodes = []
-        for group in finished_groups_nonzero_adv + finished_groups_zero_adv:
-            flattened_episodes.extend(group)
-        total_transitions_collected = sum(finished_groups_nonzero_adv_num_transitions) + sum(finished_groups_zero_adv_num_transitions)
-
         info = {
-            "actor/num_generations": num_generations,
             "actor/num_generation_failed": num_generation_failed,
-            "actor/prop_generation_failed": num_generation_failed / num_generations,
-            "actor/prop_episode_generation_failed": (
+            "actor/prop_generation_failed": (
                 num_generation_failed / num_finished_episodes
                 if self.args.keep_generation_failed
                 else num_generation_failed
@@ -574,24 +524,7 @@ class Actor(PPOActor):
             "actor/num_tool_uses": np.mean(finished_episodes_tool_uses),
             "actor/num_tool_success": np.mean(finished_episodes_tool_success),
             "actor/num_groups": len(finished_groups),
-            "actor/mean_episode_length": np.mean([len(ep) for ep in flattened_episodes]),
-            "actor/max_episode_length": np.max([len(ep) for ep in flattened_episodes]),
-            "actor/min_episode_length": np.min([len(ep) for ep in flattened_episodes]),
-            "actor/mean_episode_return": np.mean(
-                [
-                    sum(transition.reward for transition in episode)
-                    for episode in flattened_episodes
-                ]
-            ),
-            "actor/mean_episode_success": np.mean(
-                [episode[-1].reward == 1 for episode in flattened_episodes]
-            ),  # NOTE: assuming success reward is always 1
-            "actor/total_transitions_collected": total_transitions_collected,
-            "actor/prop_total_transitions_wasted": 1.0 - sum(finished_groups_num_transitions) / total_transitions_collected,
-            "actor/prop_zero_adv": 1.0 - sum(finished_groups_nonzero_adv_num_transitions) / sum(finished_groups_num_transitions),
-            "actor/too_many_zero_adv": float(too_many_zero_adv),
         }
-
         if self.step_count % self.args.dump_experience_every == 0:
             _to_dump = {}
             for n, group in enumerate(finished_groups):

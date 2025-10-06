@@ -57,7 +57,7 @@ def print_envs():
 
 def make(env_id: str, **kwargs) -> Env:
     if env_id not in ENV_REGISTRY:
-        raise ValueError(f"Environment {env_id} not found in registry.")
+        raise ValueError(f"Environment {env_id} not found in registry.\n{ENV_REGISTRY=}")
 
     env_spec = ENV_REGISTRY[env_id]
 

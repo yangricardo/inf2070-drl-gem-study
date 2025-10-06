@@ -19,6 +19,13 @@ from gem.envs.registration import register
 # Register games from our implementation of TextArena and beyond.
 # GuessTheNumber
 register(
+    "game:GuessTheNumber-v0",
+    "gem.envs.game_env.guess_the_number:GuessTheNumberEnv",
+    min_number=1,
+    max_number=20,
+    max_turns=10,
+)
+register(
     "game:GuessTheNumber-v0-hard",
     "gem.envs.game_env.guess_the_number:GuessTheNumberEnv",
     min_number=1,
