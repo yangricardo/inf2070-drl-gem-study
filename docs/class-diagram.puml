@@ -1,13 +1,10 @@
 @startuml gem_class_diagram
 ' Force a vertical/top-to-bottom layout and increase separation for readability
 top to bottom direction
-skinparam ranksep 60
-skinparam nodesep 30
+skinparam ranksep 80
+skinparam nodesep 40
 skinparam classAttributeIconSize 0
 skinparam shadowing false
-
-' GEM project - Class Diagram (PlantUML)
-' Note: modules without classes are represented as classes with the module name.
 
 ' GEM project - Class Diagram (PlantUML)
 ' Note: modules without classes are represented as classes with the module name.
@@ -88,7 +85,15 @@ package "gem" {
     ToolEnvWrapper ---> BaseTool : uses
   }
 
+  ' Place wrapper_factory below wrappers and connect vertically
+  package "utils" {
+    class "wrapper_factory" as wrapper_factory {
+      + get_wrapper_fns(wrappers, tokenizer=None)
+    }
+  }
 
+  wrapper_factory -down-> ObservationWrapper : constructs
+  wrapper_factory -down-> ToolEnvWrapper : constructs
 
   package "tools" {
     class BaseTool  {
@@ -196,9 +201,6 @@ package "gem" {
       + TERMINAL_STATE
       + LanguageGameReward
     }
-    class "wrapper_factory" as wrapper_factory {
-      + get_wrapper_fns(wrappers, tokenizer=None)
-    }
     class "parsing" as parsing {
       + last_boxed_only_string(string)
       + remove_boxed(s)
@@ -227,11 +229,6 @@ package "gem" {
       + extract_code_from_model(s)
     }
     class "qa_em" as qa_em
-
-
-    wrapper_factory --> ObservationWrapper : constructs
-    wrapper_factory --> ToolEnvWrapper : constructs
-
 
   }
 
