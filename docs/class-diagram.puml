@@ -1,0 +1,206 @@
+@startuml gem_class_diagram
+' Force a vertical/top-to-bottom layout and increase separation for readability
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+' GEM project - Class Diagram (PlantUML)
+' Note: modules without classes are represented as classes with the module name.
+
+package "concurrent.futures" {
+  class ThreadPoolExecutor
+}
+
+package "gem.core" {
+  abstract class Env {
+    + step(action)
+    + reset(seed=None)
+    + sample_random_action()
+    + spawn(same_state=False, **kwargs)
+    + unwrapped : Env
+  }
+
+  class EnvWrapper {
+    - env: Env
+    + EnvWrapper(env)
+    + unwrapped : Env
+  }
+  Env <|-- EnvWrapper
+  EnvWrapper o-- Env : wraps
+}
+
+package "gem.vector" {
+  class VectorEnv {
+    - env_ids
+    - env_fns
+    - envs : List[Env]
+    - num_envs
+    - autoreset_mode
+    + reset(seed=None, **kwargs)
+    + step(...)
+  }
+
+  class SyncVectorEnv
+  class AsyncVectorEnv
+
+  VectorEnv <|-- SyncVectorEnv
+  VectorEnv <|-- AsyncVectorEnv
+  Env --* VectorEnv  : contains
+  AsyncVectorEnv --> ThreadPoolExecutor  : parallel step()
+  Env <-- SyncVectorEnv  : iterates over envs and calls step/reset
+
+}
+
+package "gem.wrappers" {
+  class ObservationWrapper {
+    - obs_queue
+    - act_queue
+    - tokenizer
+    + reset(seed=None, **kwargs)
+    + step(action)
+    + observation(info)
+  }
+  class EpisodeTrackingWrapper {
+    - step_counter
+    - cumulative_rewards
+    + step(action)
+    + reset(seed=None)
+  }
+  class ToolEnvWrapper {
+    - tools: List[BaseTool]
+    - tool_use_counter
+    - tool_success_counter
+    + reset(...)
+    + step(action)
+  }
+
+  ObservationWrapper --|> EnvWrapper
+  EnvWrapper --|> EpisodeTrackingWrapper
+  EnvWrapper --|> ToolEnvWrapper
+  ObservationWrapper --> "tokenizer module" : uses
+  ToolEnvWrapper --> BaseTool : uses
+}
+
+
+package "gem.tools" {
+  class BaseTool  {
+    + instruction_string()
+    + execute_action(action)
+  } 
+  class PythonCodeTool 
+  class Sandbox
+  class SearchTool
+  class MCPTool
+
+  BaseTool <|-- PythonCodeTool
+  BaseTool <|-- SearchTool
+  BaseTool <|-- MCPTool
+  PythonCodeTool --> sandbox : run_python()
+  SearchTool --> "requests/remote search" : _search()
+  BaseTool <-- ToolEnvWrapper : uses
+}
+
+package "gem.envs" {
+  
+  package "game_env" {
+    ' Example game envs (inherit Env)
+    class GuessTheNumberEnv
+    class MastermindEnv
+    class MinesweeperEnv
+    class WordleEnv
+    class SokobanEnv
+    class HangmanEnv
+    class Game2048Env
+    class TowerofHanoiEnv
+    class FifteenPuzzleEnv
+    class CrosswordsEnv
+
+    GuessTheNumberEnv --|> Env
+    MastermindEnv --|> Env
+    MinesweeperEnv --|> Env
+    WordleEnv --|> Env
+    SokobanEnv --|> Env
+    HangmanEnv --|> Env
+    Game2048Env --|> Env
+    TowerofHanoiEnv --|> Env
+    FifteenPuzzleEnv --|> Env
+    CrosswordsEnv --|> Env
+  }
+
+
+  package "multiagent" {
+    class MultiAgentEnv {
+      - agents
+      - possible_agents
+      - rewards, terminations, truncations
+      + step(actions)
+      + reset(seed=None)
+    }
+    class AgentSelector
+
+    MultiAgentEnv ..> AgentSelector : uses
+    MultiAgentEnv --|> Env
+  }
+
+  package "single" {
+    ' QA / Math / Code envs (single-turn, dataset-based)
+    class QaEnv
+    class MathEnv
+    class CodeEnv
+    class MathVisualEnv
+
+    QaEnv --|> Env
+    MathEnv --|> Env
+    CodeEnv --|> Env
+    MathVisualEnv --|> MathEnv
+
+  }
+
+  class EnvSpec
+  class registration <<module>>
+  registration --> EnvSpec : defines
+  VectorEnv <.. registration  : make_vec creates
+
+
+}
+
+
+
+package "gem.utils" {
+
+  ' Utility / module-as-class representations
+  class "seeding" as seeding {
+    + set_seed(seed)
+    + np_random(seed)
+  }
+  class "sandbox" as sandbox {
+    + run_python(code, sandbox_type, stdin=None, timeout=...)
+    + check_forbidden_imports(code)
+  }
+  class "constants" as constants {
+    + TERMINAL_STATE
+    + LanguageGameReward
+  }
+  class "gem.wrappers.wrapper_factory" as wrapper_factory {
+    + get_wrapper_fns(wrappers, tokenizer=None)
+  }
+  class "parsing" as parsing {
+    + extract_last_boxed_answer(s)
+    + extract_code_from_model(s)
+  }
+  class "qa_em" as qa_em
+  class "registration" as registration
+
+}
+
+
+' Associations / usages
+
+wrapper_factory --> ObservationWrapper : constructs
+wrapper_factory --> ToolEnvWrapper : constructs
+
+MultiAgentEnv -[hidden]-> Env
+MathEnv -[hidden]-> Env
+@enduml
