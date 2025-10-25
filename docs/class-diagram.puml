@@ -1,13 +1,11 @@
 @startuml gem_class_diagram
-' Force a vertical/top-to-bottom layout and increase separation for readability
+
 top to bottom direction
-skinparam ranksep 80
-skinparam nodesep 40
+skinparam ranksep 100
+skinparam nodesep 50
 skinparam classAttributeIconSize 0
 skinparam shadowing false
 
-' GEM project - Class Diagram (PlantUML)
-' Note: modules without classes are represented as classes with the module name.
 
 package "concurrent.futures" {
   class ThreadPoolExecutor
@@ -44,13 +42,13 @@ package "gem" {
       + step(...)
     }
 
-    class AsyncVectorEnv
     class SyncVectorEnv
+    class AsyncVectorEnv
 
     Env ----* VectorEnv  : contains
-    VectorEnv <|-- AsyncVectorEnv
-    ThreadPoolExecutor <- AsyncVectorEnv : parallel step()
+    AsyncVectorEnv --|> VectorEnv
     VectorEnv <|-- SyncVectorEnv
+    ThreadPoolExecutor <- AsyncVectorEnv : parallel step()
     SyncVectorEnv ----> Env : iterates over envs and calls step/reset
 
   }
@@ -85,15 +83,6 @@ package "gem" {
     ToolEnvWrapper ---> BaseTool : uses
   }
 
-  ' Place wrapper_factory below wrappers and connect vertically
-  package "utils" {
-    class "wrapper_factory" as wrapper_factory {
-      + get_wrapper_fns(wrappers, tokenizer=None)
-    }
-  }
-
-  wrapper_factory -down-> ObservationWrapper : constructs
-  wrapper_factory -down-> ToolEnvWrapper : constructs
 
   package "tools" {
     class BaseTool  {
@@ -119,7 +108,8 @@ package "gem" {
   package "envs" {
     
     package "game_env" {
-      ' Example game envs (inherit Env)
+      left to right direction
+      
       class GuessTheNumberEnv
       class MastermindEnv
       class MinesweeperEnv
@@ -159,7 +149,7 @@ package "gem" {
     }
 
     package "single" {
-      ' QA / Math / Code envs (single-turn, dataset-based)
+      
       class QaEnv
       class MathEnv
       class CodeEnv
@@ -187,7 +177,13 @@ package "gem" {
 
   package "utils" {
 
-    ' Utility / module-as-class representations
+    left to right direction
+    
+    
+    class "wrapper_factory" as wrapper_factory {
+      + get_wrapper_fns(wrappers, tokenizer=None)
+    }
+
     class "seeding" as seeding {
       + set_seed(seed)
       + np_random(seed)
@@ -229,6 +225,10 @@ package "gem" {
       + extract_code_from_model(s)
     }
     class "qa_em" as qa_em
+
+
+    wrapper_factory -down-> ObservationWrapper : constructs
+    wrapper_factory -down-> ToolEnvWrapper : constructs
 
   }
 
