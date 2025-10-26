@@ -13,4 +13,4 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 O diretório [inf2070-studies/notebooks](./notebooks) implementa alguns notebooks utilizados para experimentar o projeto GEM:
 
-- [Getting Started](./notebooks/getting-started.ipynb)
+- [Getting Started](./getting-started.ipynb)
