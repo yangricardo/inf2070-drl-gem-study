@@ -1,5 +1,5 @@
 <div style="display:flex;gap:16px;align-items:center;margin-bottom:32px">
-  <img src="https://www.puc-rio.br/imagens/brasao_preto_horizontal.svg" alt="PUC-Rio" style="height:80px"/>
+  <img src="https://www.puc-rio.br/imagens/brasao_preto_horizontal.svg" alt="PUC-Rio" style="height:80px;margin-right:12px"/>
   <img src="https://www.inf.puc-rio.br/wordpress/wp-content/themes/puc-di/assets/img/theme/logo.png" alt="DI PUC-Rio" style="height:80px"/>
 </div>
 
