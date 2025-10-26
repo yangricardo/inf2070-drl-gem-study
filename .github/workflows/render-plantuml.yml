@@ -21,7 +21,7 @@ jobs:
             [ -f "$f" ] || continue
             plantuml -DPLANTUML_LIMIT_SIZE=16384 -DGRAPHVIZ_DPI=300 -tpng "$f"
             plantuml -DPLANTUML_LIMIT_SIZE=16384 -DGRAPHVIZ_DPI=300 -tsvg "$f"
-            inkscape gem-class-diagram.svg --export-type=pdf --export-filename=gem_class_diagram.pdf
+            inkscape gem-class-diagram.svg --export-type=pdf --export-filename="$f".pdf
           done
       - name: Commit and push rendered images
         run: |
