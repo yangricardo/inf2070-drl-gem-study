@@ -12,4 +12,4 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 ## [Arquitetura Identificada](./arquitetura/README.md)
 
-## [Notebooks de Experimentação](./NOTEBOOKS.md)
+## [Notebooks de Experimentação](./notebooks/README.md)

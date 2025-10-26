@@ -14,6 +14,10 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 > Instale o [VSCode](https://code.visualstudio.com/) conforme o seu sistema operacional.
 
+## NVIDIA CUDA
+
+
+
 ### Python 3.12.12
 
 Para a reprodução do reprositório é necessário utilizar a versão 3.12.12 do [Python](https://www.python.org/downloads/). Pode-se usar ferramentas como [PyEnv](https://github.com/pyenv/pyenv), [Conda](https://anaconda.org/anaconda/conda) ou ASDF para atingir esse objetivo.
