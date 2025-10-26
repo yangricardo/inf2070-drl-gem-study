@@ -50,7 +50,6 @@ flatbuffers==25.9.23
 fonttools==4.60.1
 frozenlist==1.8.0
 fsspec==2025.9.0
--e git+ssh://git@github.com/yangricardo/inf2070-drl-gem-study.git@aa4832682c79654008d9f1c734236bc5cb7b5f62#egg=gem_llm
 google-api-core==2.27.0
 google-api-python-client==2.185.0
 google-auth==2.41.1
@@ -155,6 +154,7 @@ pydantic==2.12.3
 pydantic-settings==2.11.0
 pydantic_core==2.41.4
 pyfiglet==1.0.2
+-e git+https://github.com/yangricardo/inf2070-drl-gem-study.git@5830e3284f70fff574cdc0400e6f2d27fb26ce44#egg=gem_llm
 Pygments==2.19.2
 pyjnius==1.7.0
 pylatexenc==2.10
