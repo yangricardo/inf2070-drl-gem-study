@@ -44,7 +44,14 @@ Crie um ambiente Virtual Env rodando o comando no diretório raiz ao clone do re
 > python -m venv venv
 ```
 
-> Este repositório está otimizado
+> Este repositório está otimizado com arquivos das extensões e configurações de workspace do VSCode utilizando o Venv
+
+
+Para ativar o ambiente, execute o comando
+
+```bash
+> source venv/bin/activate
+```
 
 
 ## Arquitetura Identificada
