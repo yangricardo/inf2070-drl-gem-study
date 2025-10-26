@@ -16,11 +16,25 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 ## NVIDIA CUDA
 
+> <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#fedora>
 
+### Define versão CUDA 12 compativel com python 10
 
-### Python 3.12.12
+```bash
+sudo dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
+```
 
-Para a reprodução do reprositório é necessário utilizar a versão 3.12.12 do [Python](https://www.python.org/downloads/). Pode-se usar ferramentas como [PyEnv](https://github.com/pyenv/pyenv), [Conda](https://anaconda.org/anaconda/conda) ou ASDF para atingir esse objetivo.
+> Usando versão Fedora 42, é instalado automaticamente o CUDA 13, sendo necessário definir o repositório do Fedora 41 que possui os pacotes referentes ao CUDA 12
+
+```bash
+sudo dnf install cuda-toolkit-12-9
+```
+
+> <https://gemini.google.com/share/be3e769f5a78>
+
+### Python 3.10.19
+
+Para a reprodução do reprositório é necessário utilizar a versão 3.10.19 do [Python](https://www.python.org/downloads/). Pode-se usar ferramentas como [PyEnv](https://github.com/pyenv/pyenv), [Conda](https://anaconda.org/anaconda/conda) ou ASDF para atingir esse objetivo.
 
 Você pode verificar o comando utilizando o comando:
 
@@ -39,8 +53,8 @@ Execute os comandos abaixo para instalar no seu ambiente.
 
 ```bash
 > asdf plugin add python
-> asdf install python 3.12.12
-> asdf set python 3.12.12
+> asdf install python 3.10.19
+> asdf set python 3.10.19
 ```
 
 > Verifique se o arquivo .tool-versions contém a versão instalada
@@ -100,7 +114,7 @@ Alguns testes apresentaram falhas de execução nesta versão
 ```bash
 pytest             
 ============================================================================================== test session starts ===============================================================================================
-platform linux -- Python 3.12.12, pytest-8.4.2, pluggy-1.6.0
+platform linux -- Python 3.10.19, pytest-8.4.2, pluggy-1.6.0
 rootdir: /home/yang/projects/inf2070-gym
 configfile: pyproject.toml
 plugins: anyio-4.11.0
@@ -111,7 +125,7 @@ ________________________________________________________________________________
 ImportError while importing test module '/home/yang/projects/inf2070-gym/tests/test_env/test_game.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
-../../.asdf/installs/python/3.12.12/lib/python3.12/importlib/__init__.py:90: in import_module
+../../.asdf/installs/python/3.10.19/lib/python3.10/importlib/__init__.py:90: in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 tests/test_env/test_game.py:19: in <module>
@@ -121,7 +135,7 @@ ________________________________________________________________________________
 ImportError while importing test module '/home/yang/projects/inf2070-gym/tests/test_env/test_terminal.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
-../../.asdf/installs/python/3.12.12/lib/python3.12/importlib/__init__.py:90: in import_module
+../../.asdf/installs/python/3.10.19/lib/python3.10/importlib/__init__.py:90: in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 tests/test_env/test_terminal.py:21: in <module>
@@ -133,7 +147,7 @@ ___________________________________________________________________________ ERRO
 ImportError while importing test module '/home/yang/projects/inf2070-gym/tests/test_multiagent/test_multiagent.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
-../../.asdf/installs/python/3.12.12/lib/python3.12/importlib/__init__.py:90: in import_module
+../../.asdf/installs/python/3.10.19/lib/python3.10/importlib/__init__.py:90: in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 tests/test_multiagent/test_multiagent.py:21: in <module>
