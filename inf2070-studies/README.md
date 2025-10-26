@@ -16,13 +16,16 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 ### Python 3.12.12
 
-Para a reprodução do reprositório é necessário utilizar a versão 3.12.12 do [Python](https://www.python.org/downloads/). Pode-se usar ferramentas como PyEnv, Conda ou ASDF para atingir esse objetivo.
+Para a reprodução do reprositório é necessário utilizar a versão 3.12.12 do [Python](https://www.python.org/downloads/). Pode-se usar ferramentas como [PyEnv](https://github.com/pyenv/pyenv), [Conda](https://anaconda.org/anaconda/conda) ou ASDF para atingir esse objetivo.
 
 Você pode verificar o comando utilizando o comando:
 
 ```bash
 > python -V
 ```
+
+> Ferramentas como PyEnv e ASDF podem requerer instalações extras. [Esta página](https://github.com/pyenv/pyenv/wiki#suggested-build-environment) detalha para diversas  distribuições Linux e outros sistemas operacionais
+
 
 #### Instalando versão específica do Python via ASDF
 
@@ -35,6 +38,8 @@ Execute os comandos abaixo para instalar no seu ambiente.
 > asdf install python 3.12.12
 > asdf set python 3.12.12
 ```
+
+> Verifique se o arquivo .tool-versions contém a versão instalada
 
 ### Virtual Env
 
