@@ -16,7 +16,7 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 ### Python 3.12.12
 
-Para a reprodução do reprositório é necessário utilizar a versão 3.12.12 do Python. Pode-se usar ferramentas como PyEnv, Conda ou ASDF para atingir esse objetivo.
+Para a reprodução do reprositório é necessário utilizar a versão 3.12.12 do [Python](https://www.python.org/downloads/). Pode-se usar ferramentas como PyEnv, Conda ou ASDF para atingir esse objetivo.
 
 Você pode verificar o comando utilizando o comando:
 
