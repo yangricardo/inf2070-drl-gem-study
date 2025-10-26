@@ -24,7 +24,7 @@ Você pode verificar o comando utilizando o comando:
 > python -V
 ```
 
-> Ferramentas como PyEnv e ASDF podem requerer instalações extras. [Esta página](https://github.com/pyenv/pyenv/wiki#suggested-build-environment) detalha para diversas  distribuições Linux e outros sistemas operacionais
+> Ferramentas como PyEnv e ASDF podem requerer instalações extras devido a compilação para instalação compatível ao sistema operacional utilizado. [Esta página](https://github.com/pyenv/pyenv/wiki#suggested-build-environment) detalha para diversas  distribuições Linux e outros sistemas operacionais
 
 
 #### Instalando versão específica do Python via ASDF
