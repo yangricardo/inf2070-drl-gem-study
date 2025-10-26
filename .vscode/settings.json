@@ -1,0 +1,13 @@
+{
+  "jupyter.runStartupCommands": [
+    "%load_ext autoreload",
+    "%autoreload 2"
+  ],
+  "python-envs.pythonProjects": [
+    {
+      "path": "${workspaceFolder}/.venv/bin/python",
+      "envManager": "ms-python.python:venv",
+      "packageManager": "ms-python.python:pip"
+    }
+  ]
+}
