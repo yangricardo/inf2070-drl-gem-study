@@ -30,6 +30,14 @@ sudo dnf config-manager addrepo --from-repofile=https://developer.download.nvidi
 sudo dnf install cuda-toolkit-12-9
 ```
 
+> Configurar a Home do cuda em `$HOME/.bashrc` ou `$HOME/.zshrc`
+
+```bash
+export CUDA_HOME=/usr/local/cuda-12 # atualizar conforme a versão do cuda
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+``` 
+
 > <https://gemini.google.com/share/be3e769f5a78>
 
 ### Python 3.10.19
