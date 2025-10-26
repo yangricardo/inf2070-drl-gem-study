@@ -134,4 +134,4 @@ ERROR tests/test_multiagent/test_multiagent.py
 
 ## Arquitetura Identificada
 
-![Diagrama de Classes do GEM](./avaliacao-arquitetura/class-diagram.svg)
+![Diagrama de Classes do GEM](./avaliacao-arquitetura/gem_class_diagram.png)
