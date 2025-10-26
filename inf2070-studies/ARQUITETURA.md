@@ -13,7 +13,7 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 
 <!-- Rendered diagram gerado a partir de class-diagram.plantuml -->
-<img src="./avaliacao-arquitetura/gem_class_diagram.png" alt="Diagrama de Classes do GEM (gerado a partir de class-diagram.plantuml)" />
+<img src="./avaliacao-arquitetura/gem-class-diagram.png" alt="Diagrama de Classes do GEM (gerado a partir de class-diagram.plantuml)" />
 
 <!-- PlantUML source (para edição/visualização em VSCode com plugin PlantUML) -->
 ````puml

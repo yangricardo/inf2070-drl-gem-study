@@ -1,0 +1,32 @@
+name: Render PlantUML
+
+on:
+  push:
+    paths:
+      - 'inf2070-studies/avaliacao-arquitetura/**.plantuml'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Install PlantUML deps
+        run: sudo apt-get update && sudo apt-get install -y plantuml graphviz inkscape
+      - name: Render diagrams
+        run: |
+          cd inf2070-studies/avaliacao-arquitetura
+          for f in *.plantuml *.puml; do
+            [ -f "$f" ] || continue
+            plantuml -DPLANTUML_LIMIT_SIZE=16384 -DGRAPHVIZ_DPI=300 -tpng "$f"
+            plantuml -DPLANTUML_LIMIT_SIZE=16384 -DGRAPHVIZ_DPI=300 -tsvg "$f"
+            inkscape gem-class-diagram.svg --export-type=pdf --export-filename=gem_class_diagram.pdf
+          done
+      - name: Commit and push rendered images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add inf2070-studies/avaliacao-arquitetura/*.png || true
+          git commit -m "Auto-render PlantUML diagrams" || echo "No changes to commit"
+          git push || echo "Push failed"

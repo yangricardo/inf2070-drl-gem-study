@@ -1,4 +1,4 @@
-@startuml gem_class_diagram
+@startuml gem-class-diagram
 
 top to bottom direction
 skinparam ranksep 100
