@@ -8,7 +8,7 @@ cmd
 __pycache__/
 *.py[cod]
 *$py.class
-
+inf2070-studies/notebooks/outputs
 # C extensions
 *.so
 
