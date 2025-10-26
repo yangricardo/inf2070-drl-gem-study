@@ -53,6 +53,78 @@ Para ativar o ambiente, execute o comando
 > source venv/bin/activate
 ```
 
+### Instalação de dependências
+
+
+Como parte das instruções padrão, pode-se instalar as dependências do projeto
+
+```bash
+> pip install -e .
+```
+
+Para executar os testes automatizados, é necessário instalar os comandos
+
+```bash
+> pip install pytest fire fastmcp
+```
+
+
+
+### Execução de Testes Automatizados
+
+
+Alguns testes apresentaram falhas de execução nesta versão
+
+
+```bash
+pytest             
+============================================================================================== test session starts ===============================================================================================
+platform linux -- Python 3.12.12, pytest-8.4.2, pluggy-1.6.0
+rootdir: /home/yang/projects/inf2070-gym
+configfile: pyproject.toml
+plugins: anyio-4.11.0
+collected 36 items / 3 errors                                                                                                                                                                                    
+
+===================================================================================================== ERRORS =====================================================================================================
+__________________________________________________________________________________ ERROR collecting tests/test_env/test_game.py __________________________________________________________________________________
+ImportError while importing test module '/home/yang/projects/inf2070-gym/tests/test_env/test_game.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../.asdf/installs/python/3.12.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_env/test_game.py:19: in <module>
+    from gem.utils.debug import run_and_print_episode_with_random_selection
+E   ImportError: cannot import name 'run_and_print_episode_with_random_selection' from 'gem.utils.debug' (/home/yang/projects/inf2070-gym/gem/utils/debug.py)
+________________________________________________________________________________ ERROR collecting tests/test_env/test_terminal.py ________________________________________________________________________________
+ImportError while importing test module '/home/yang/projects/inf2070-gym/tests/test_env/test_terminal.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../.asdf/installs/python/3.12.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_env/test_terminal.py:21: in <module>
+    from gem.envs.terminal.docker_env import ContainerConfig, DockerEnv, TaskConfig
+gem/envs/terminal/docker_env.py:26: in <module>
+    from terminal_bench.handlers.trial_handler import TrialHandler
+E   ModuleNotFoundError: No module named 'terminal_bench'
+___________________________________________________________________________ ERROR collecting tests/test_multiagent/test_multiagent.py ____________________________________________________________________________
+ImportError while importing test module '/home/yang/projects/inf2070-gym/tests/test_multiagent/test_multiagent.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../.asdf/installs/python/3.12.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_multiagent/test_multiagent.py:21: in <module>
+    from gem.multiagent import AgentSelector, MultiAgentEnv
+E   ModuleNotFoundError: No module named 'gem.multiagent'
+============================================================================================ short test summary info =============================================================================================
+ERROR tests/test_env/test_game.py
+ERROR tests/test_env/test_terminal.py
+ERROR tests/test_multiagent/test_multiagent.py
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Interrupted: 3 errors during collection !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+=============================================================================================== 3 errors in 10.32s ===============================================================================================
+```
 
 ## Arquitetura Identificada
 
