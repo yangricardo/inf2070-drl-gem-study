@@ -8,8 +8,8 @@
 
 Este fork é uma análise do artigo e repositório do Framework proposto pelo artigo [GEM: A Gym For Agentic LLMs](https://arxiv.org/pdf/2510.01051) compatível com a versão [v0.1.0](https://github.com/axon-rl/gem/tree/2780ab6a7626c012092c045f5b9747062be35214) publicada em 5/10/2025.
 
-## [Configuração de Ambiente](./CONFIGURAÇÃO_DE_AMBIENTE.md)
 
-## [Arquitetura Identificada](./ARQUITETURA.md)
+## Arquitetura Identificada
 
-## [Notebooks de Experimentação](./NOTEBOOKS.md)
+![Diagrama de Classes do GEM](./avaliacao-arquitetura/gem_class_diagram.png)
+
