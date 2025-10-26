@@ -62,12 +62,18 @@ Como parte das instruções padrão, pode-se instalar as dependências do projet
 > pip install -e .
 ```
 
-Para executar os testes automatizados, é necessário instalar os comandos
+Para executar os testes automatizados, é necessário instalar os comandos:
 
 ```bash
 > pip install pytest fire fastmcp
 ```
 
+Para instalar as dependências de execução dos notebooks, execute:
+
+
+```bash
+> pip install ipykernel matplotlib-inline jupyter_client jupyter_core ipython jedi pandas numpy openpyxl
+```
 
 
 ### Execução de Testes Automatizados
