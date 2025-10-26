@@ -10,6 +10,6 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 ## [Configuração de Ambiente](./CONFIGURAÇÃO_DE_AMBIENTE.md)
 
-## [Arquitetura Identificada](./ARQUITETURA.md)
+## [Arquitetura Identificada](./arquitetura/README.md)
 
 ## [Notebooks de Experimentação](./NOTEBOOKS.md)

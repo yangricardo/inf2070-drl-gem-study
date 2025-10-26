@@ -3,7 +3,7 @@ name: Render PlantUML
 on:
   push:
     paths:
-      - 'inf2070-studies/avaliacao-arquitetura/**.plantuml'
+      - 'inf2070-studies/arquitetura/**.plantuml'
 
 jobs:
   render:
@@ -16,7 +16,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y plantuml graphviz inkscape
       - name: Render diagrams
         run: |
-          cd inf2070-studies/avaliacao-arquitetura
+          cd inf2070-studies/arquitetura
           for f in *.plantuml *.puml; do
             [ -f "$f" ] || continue
             plantuml -DPLANTUML_LIMIT_SIZE=16384 -DGRAPHVIZ_DPI=300 -tpng "$f"
@@ -27,8 +27,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add inf2070-studies/avaliacao-arquitetura/*.png || true
-          git add inf2070-studies/avaliacao-arquitetura/*.svg || true
-          git add inf2070-studies/avaliacao-arquitetura/*.pdf || true
+          git add inf2070-studies/arquitetura/*.png || true
+          git add inf2070-studies/arquitetura/*.svg || true
+          git add inf2070-studies/arquitetura/*.pdf || true
           git commit -m "Auto-render PlantUML diagrams" || echo "No changes to commit"
           git push || echo "Push failed"
