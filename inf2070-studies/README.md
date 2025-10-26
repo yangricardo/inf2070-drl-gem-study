@@ -135,3 +135,10 @@ ERROR tests/test_multiagent/test_multiagent.py
 ## Arquitetura Identificada
 
 ![Diagrama de Classes do GEM](./avaliacao-arquitetura/gem_class_diagram.png)
+
+
+## Notebooks de Experimentação
+
+O diretório [inf2070-studies/notebooks](./notebooks) implementa alguns notebooks utilizados para experimentar o projeto GEM:
+
+- [Getting Started](./notebooks/getting-started.ipynb)
