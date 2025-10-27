@@ -55,6 +55,18 @@ Você pode verificar o comando utilizando o comando:
 
 > Ferramentas como PyEnv e ASDF podem requerer instalações extras devido a compilação para instalação compatível ao sistema operacional utilizado. [Esta página](https://github.com/pyenv/pyenv/wiki#suggested-build-environment) detalha para diversas  distribuições Linux e outros sistemas operacionais
 
+#### Configuração do PIP
+
+Alguns pacotes são muito grandes, uma configuração necessária foi definir as variaveis de ambiente para evitar problemas de espaço em disco
+
+```bash
+PIP_TMPDIR="${PIP_TMPDIR:-$HOME/pip_tmp}"
+PIP_CACHEDIR="${PIP_CACHEDIR:-$HOME/.cache/pip}"
+mkdir -p "$PIP_TMPDIR" "$PIP_CACHEDIR"
+export TMPDIR="$PIP_TMPDIR"
+export PIP_CACHE_DIR="$PIP_CACHEDIR"
+``` 
+
 
 #### Instalando versão específica do Python via ASDF
 
