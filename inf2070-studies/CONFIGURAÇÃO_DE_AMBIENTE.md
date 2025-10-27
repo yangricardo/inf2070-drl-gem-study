@@ -16,7 +16,10 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 ## NVIDIA CUDA
 
-> <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#fedora>
+> - Versão mais recente <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#fedora>
+> - v12.4.0 <https://docs.nvidia.com/cuda/archive/12.4.0/cuda-installation-guide-linux/index.html>
+> - Versões arquivadas: <https://docs.nvidia.com/cuda/archive/>
+
 
 ### Define versão CUDA 12.4 compativel com python 10 e projetos
 
