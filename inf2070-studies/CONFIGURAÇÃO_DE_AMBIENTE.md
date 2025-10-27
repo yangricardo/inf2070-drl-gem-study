@@ -18,22 +18,22 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 
 > <https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#fedora>
 
-### Define versão CUDA 12 compativel com python 10
+### Define versão CUDA 12.4 compativel com python 10 e projetos
 
 ```bash
-sudo dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora41/x86_64/cuda-fedora41.repo
+sudo dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora39/x86_64/cuda-fedora39.repo
 ```
 
-> Usando versão Fedora 42, é instalado automaticamente o CUDA 13, sendo necessário definir o repositório do Fedora 41 que possui os pacotes referentes ao CUDA 12
+> Usando versão Fedora 42, é instalado automaticamente o CUDA 13, sendo necessário definir o repositório do Fedora 39 que possui os pacotes referentes ao CUDA 12.4
 
 ```bash
-sudo dnf install cuda-toolkit-12-9
+sudo dnf install cuda-toolkit-12-4
 ```
 
 > Configurar a Home do cuda em `$HOME/.bashrc` ou `$HOME/.zshrc`
 
 ```bash
-export CUDA_HOME=/usr/local/cuda-12 # atualizar conforme a versão do cuda
+export CUDA_HOME=/usr/local/cuda-12.4 # atualizar conforme a versão do cuda
 export PATH=$CUDA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 ``` 
