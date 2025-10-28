@@ -16,6 +16,8 @@ Autores:
 
 - Olavo Lucas: [Github](https://github.com/OLMS99) / [Linkedin](https://www.linkedin.com/in/olavo-lucas/)
 
+- Lucas Tavares: [Github](https://github.com/LucasTavrs2) / [Linkedin](https://www.linkedin.com/in/lucas-tavares-3038901a5/)
+
 ## [Configuração de Ambiente](./inf2070-studies/CONFIGURAÇÃO_DE_AMBIENTE.md)
 
 ## [Arquitetura Identificada](./inf2070-studies/arquitetura/README.md)
