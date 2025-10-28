@@ -24,13 +24,13 @@ Este fork é uma análise do artigo e repositório do Framework proposto pelo ar
 ### Define versão CUDA 12.4 compativel com python 10 e projetos
 
 ```bash
-sudo dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora39/x86_64/cuda-fedora39.repo
+ > sudo dnf config-manager addrepo --from-repofile=https://developer.download.nvidia.com/compute/cuda/repos/fedora39/x86_64/cuda-fedora39.repo
 ```
 
 > Usando versão Fedora 42, é instalado automaticamente o CUDA 13, sendo necessário definir o repositório do Fedora 39 que possui os pacotes referentes ao CUDA 12.4
 
 ```bash
-sudo dnf install cuda-toolkit-12-4
+ > sudo dnf install cuda-toolkit-12-4
 ```
 
 > Configurar a Home do cuda em `$HOME/.bashrc` ou `$HOME/.zshrc`
@@ -50,7 +50,7 @@ Para a reprodução do reprositório é necessário utilizar a versão 3.10.19 d
 Você pode verificar o comando utilizando o comando:
 
 ```bash
-> python -V
+ > python -V
 ```
 
 > Ferramentas como PyEnv e ASDF podem requerer instalações extras devido a compilação para instalação compatível ao sistema operacional utilizado. [Esta página](https://github.com/pyenv/pyenv/wiki#suggested-build-environment) detalha para diversas  distribuições Linux e outros sistemas operacionais
@@ -75,9 +75,9 @@ export PIP_CACHE_DIR="$PIP_CACHEDIR"
 Execute os comandos abaixo para instalar no seu ambiente.
 
 ```bash
-> asdf plugin add python
-> asdf install python 3.10.19
-> asdf set python 3.10.19
+ > asdf plugin add python
+ > asdf install python 3.10.19
+ > asdf set python 3.10.19
 ```
 
 > Verifique se o arquivo .tool-versions contém a versão instalada
@@ -87,7 +87,7 @@ Execute os comandos abaixo para instalar no seu ambiente.
 Crie um ambiente Virtual Env rodando o comando no diretório raiz ao clone do repositório.
 
 ```bash
-> python -m venv venv
+ > python -m venv venv
 ```
 
 > Este repositório está otimizado com arquivos das extensões e configurações de workspace do VSCode utilizando o Venv
@@ -96,7 +96,7 @@ Crie um ambiente Virtual Env rodando o comando no diretório raiz ao clone do re
 Para ativar o ambiente, execute o comando
 
 ```bash
-> source venv/bin/activate
+ > source venv/bin/activate
 ```
 
 ### Instalação de dependências
@@ -105,26 +105,32 @@ Para ativar o ambiente, execute o comando
 Como parte das instruções padrão, pode-se instalar as dependências do projeto
 
 ```bash
-> pip install -e .
+ > pip install -e .
 ```
 
 Para executar os testes automatizados, é necessário instalar os comandos:
 
 ```bash
-> pip install pytest fire fastmcp
+ > pip install pytest fire fastmcp
+```
+
+Para instalar dependências do pytorch
+
+```bash
+ > pip install torch torchvision torchaudio 
 ```
 
 Para instalar as dependências de execução dos notebooks, execute:
 
 
 ```bash
-> pip install ipykernel matplotlib-inline jupyter_client jupyter_core ipython jedi pandas numpy openpyxl jinja2
+ > pip install ipykernel matplotlib-inline jupyter_client jupyter_core ipython jedi pandas numpy openpyxl jinja2
 ```
 
 Para instalar de forma mais fácil todas as dependências rode:
 
 ```bash
-> pip install -r requirements.txt
+ > pip install -r requirements.txt
 ```
 
 
