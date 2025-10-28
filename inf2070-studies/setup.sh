@@ -5,6 +5,12 @@
 #   USE_GPU=1 zsh inf2070-studies/setup.sh   # try GPU build (requires matching torch wheel)
 
 # activate venv
+
+if [ ! -d venv ]; then
+  echo "Creating virtual environment in ./venv"
+  python3 -m venv venv
+fi
+
 source venv/bin/activate
 
 # ensure CUDA env (update if different)
