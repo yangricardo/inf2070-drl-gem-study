@@ -118,7 +118,7 @@ Para instalar as dependências de execução dos notebooks, execute:
 
 
 ```bash
-> pip install ipykernel matplotlib-inline jupyter_client jupyter_core ipython jedi pandas numpy openpyxl
+> pip install ipykernel matplotlib-inline jupyter_client jupyter_core ipython jedi pandas numpy openpyxl jinja2
 ```
 
 Para instalar de forma mais fácil todas as dependências rode:
